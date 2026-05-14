@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+body{
+font-family:Segoe UI;
+background:#002c7a;
+padding:20px;
+margin:0;
+color:white;
+}
+
+.back{
+position:fixed;
+top:15px;
+left:15px;
+background:white;
+color:#002c7a;
+padding:12px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+}
+
+h1{
+text-align:center;
+margin:70px 0 30px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+color:#002c7a;
+border-radius:20px;
+overflow:hidden;
+}
+
+th,td{
+padding:14px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#1e90ff;
+color:white;
+}
+</style>
+</head>
+<body>
+
+<a class="back" href="/history_all">⬅ กลับ</a>
+
+<h1>📤 ประวัติส่งออก</h1>
+
+<table>
+<tr>
+<th>ชื่อลูกค้า</th>
+<th>แม่พันธุ์</th>
+<th>พ่อพันธุ์</th>
+<th>ลูกไก่เกิด</th>
+<th>วันที่ส่งออก</th>
+</tr>
+
+{% for d in done %}
+<tr>
+<td>{{d.customer}}</td>
+<td>{{d.mother}}</td>
+<td>{{d.father}}</td>
+<td>{{d.status.get('born_count','0')}}</td>
+<td>{{d.finish_date}}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>

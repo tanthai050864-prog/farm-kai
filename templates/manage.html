@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+body{
+font-family:Segoe UI;
+background:#0b3d91;
+margin:0;
+padding:30px;
+color:white;
+}
+
+.back{
+position:fixed;
+top:15px;
+left:15px;
+background:white;
+color:#0b3d91;
+padding:12px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+}
+
+h1{
+text-align:center;
+margin-bottom:30px;
+}
+
+.customer{
+background:white;
+color:#0b3d91;
+padding:25px;
+border-radius:24px;
+margin:25px auto;
+max-width:1200px;
+box-shadow:0 15px 30px rgba(0,0,0,.25);
+}
+
+.name{
+font-size:28px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.info{
+margin-bottom:18px;
+font-size:16px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
+gap:12px;
+}
+
+.btn{
+display:block;
+background:#1e90ff;
+color:white;
+text-decoration:none;
+padding:14px;
+border-radius:14px;
+font-weight:bold;
+text-align:center;
+}
+
+.empty{
+text-align:center;
+font-size:22px;
+margin-top:60px;
+}
+</style>
+</head>
+<body>
+
+<a class="back" href="/">⬅ กลับ</a>
+
+<h1>📦 จัดการไก่เข้าล็อค</h1>
+
+{% if waiting %}
+
+{% for item in waiting %}
+{% set item_index = loop.index0 %}
+
+<div class="customer">
+
+<div class="name">👤 {{item.customer}}</div>
+
+<div class="info">
+🐔 {{item.mother}} × {{item.father}}
+</div>
+
+<h3>เลือกล็อคว่าง</h3>
+
+<div class="grid">
+
+{% for cage,val in cages.items() %}
+{% if val is none %}
+
+<a class="btn" href="/assign/{{item_index}}/{{cage}}">
+{{cage}}
+</a>
+
+{% endif %}
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="empty">
+✅ ไม่มีรายการรอเข้าล็อค
+</div>
+
+{% endif %}
+
+</body>
+</html>

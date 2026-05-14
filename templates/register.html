@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ฝากผสม</title>
+
+<style>
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0b3d91,#1e90ff);
+text-align:center;
+padding:50px;
+color:white;
+margin:0;
+}
+
+.back-btn{
+position:fixed;
+top:10px;
+left:10px;
+background:white;
+color:#0b3d91;
+padding:6px 10px;
+border-radius:10px;
+font-size:13px;
+font-weight:700;
+text-decoration:none;
+}
+
+.card{
+background:white;
+color:#0b3d91;
+width:500px;
+margin:auto;
+padding:40px;
+border-radius:24px;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+}
+
+input{
+width:90%;
+padding:18px;
+margin:12px;
+border:none;
+border-radius:16px;
+background:#eef5ff;
+font-size:16px;
+outline:none;
+}
+
+button{
+padding:18px 30px;
+background:#0b3d91;
+color:white;
+border:none;
+border-radius:16px;
+font-size:18px;
+cursor:pointer;
+transition:.3s;
+width:90%;
+}
+
+button:hover{
+background:#1e90ff;
+transform:scale(1.05);
+}
+
+/* mobile */
+@media(max-width:600px){
+.card{width:90%;padding:25px;}
+input,button{width:100%;}
+}
+
+@media(min-width:601px) and (max-width:1024px){
+.card{width:80%;}
+}
+</style>
+</head>
+
+<body>
+
+<a href="/" class="back-btn">⬅</a>
+
+<div class="card">
+<h1>📥 ฝากผสม</h1>
+
+<form method="POST">
+
+<div style="text-align:left; margin-bottom:10px;">
+<label style="font-weight:bold;">📅 วันที่รับเข้า</label>
+</div>
+
+<input type="date" name="date" style="
+">
+<input name="customer" placeholder="👤 ชื่อลูกค้า" required>
+<input name="mother" placeholder="🐓 แม่พันธุ์" required>
+<input name="father" placeholder="🦅 พ่อพันธุ์" required>
+<input name="phone" placeholder="📞 เบอร์โทร" required>
+
+<!-- 🔥 เพิ่ม field กัน future พัง -->
+<input type="hidden" name="status" value="new">
+
+<button>💾 บันทึก</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

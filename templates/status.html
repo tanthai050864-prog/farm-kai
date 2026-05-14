@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+body{
+font-family:Segoe UI;
+background:#002c7a;
+padding:30px;
+margin:0;
+color:white;
+}
+.card{
+background:white;
+color:#002c7a;
+max-width:850px;
+margin:auto;
+padding:35px;
+border-radius:28px;
+}
+.row{
+padding:14px 0;
+border-bottom:1px solid #ddd;
+}
+.back{
+position:fixed;
+top:15px;
+left:15px;
+background:white;
+color:#002c7a;
+padding:12px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+}
+.update{
+color:#ff6600;
+font-weight:bold;
+font-size:18px;
+}
+</style>
+</head>
+<body>
+
+<a class="back" href="javascript:history.back()">⬅ กลับ</a>
+
+<div class="card">
+
+<h1>📋 {{cage}}</h1>
+
+<div class="row update">
+🕒 อัปเดตล่าสุด:
+{{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+</div>
+
+<div class="row">👤 {{data.customer}}</div>
+<div class="row">🐔 แม่พันธุ์: {{data.mother}}</div>
+<div class="row">🐓 พ่อพันธุ์: {{data.father}}</div>
+<div class="row">📞 {{data.phone}}</div>
+
+<div class="row">📅 วันที่ฉีด: {{data.status.get('inject_date','-')}}</div>
+<div class="row">💉 ครั้งที่: {{data.status.get('inject_count','-')}}</div>
+<div class="row">🥚 จำนวนไข่: {{data.status.get('eggs','-')}}</div>
+<div class="row">🐔 วันที่กกไข่: {{data.status.get('brooding','-')}}</div>
+<div class="row">🧪 เช็คเชื้อ: {{data.status.get('check_result','-')}}</div>
+<div class="row">📝 {{data.status.get('note','-')}}</div>
+
+</div>
+
+</body>
+</html>

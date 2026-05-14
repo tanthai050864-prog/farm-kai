@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<style>
+body{
+font-family:Segoe UI;
+background:#002c7a;
+padding:20px;
+margin:0;
+color:white;
+}
+
+.back{
+position:fixed;
+top:15px;
+left:15px;
+background:white;
+color:#002c7a;
+padding:12px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+}
+
+h1{text-align:center;margin:70px 0 30px;}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+color:#002c7a;
+padding:22px;
+border-radius:24px;
+box-shadow:0 15px 30px rgba(0,0,0,.25);
+}
+
+.buttons{
+display:flex;
+gap:8px;
+margin-top:14px;
+flex-wrap:wrap;
+}
+
+.btn{
+padding:12px;
+color:white;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+flex:1;
+text-align:center;
+}
+
+.statusbtn{background:#00b894;}
+.updatebtn{background:#1e90ff;}
+.finishbtn{background:#ff4d4d;}
+
+.pass{color:green;font-weight:bold;}
+.wait{color:#007bff;font-weight:bold;}
+.busy{color:orange;font-weight:bold;}
+.empty{color:green;font-weight:bold;}
+
+.warn{
+background:#ffd43b;
+padding:10px;
+border-radius:12px;
+margin:10px 0;
+font-weight:bold;
+}
+
+.alert{
+background:#ff4d4d;
+color:white;
+padding:10px;
+border-radius:12px;
+margin:10px 0;
+font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<a class="back" href="/zones">⬅ กลับ</a>
+
+<h1>{{title}}</h1>
+
+<div class="grid">
+
+{% for gname,data in groups.items() %}
+    {% for cage,val in data.items() %}
+
+<div class="card">
+
+<h3>🐔 {{cage}}</h3>
+
+{% if val %}
+
+<div class="pass">🟢 KPI ทำงาน</div>
+<div>👤 {{val.customer}}</div>
+
+{% if val.status and val.status.get('inject_date') %}
+<div class="busy">🟡 กำลังผสม</div>
+<div>🥚 {{val.status.get('eggs',0)}}</div>
+<div>💉 ครั้งที่ {{val.status.get('inject_count','-')}}</div>
+{% else %}
+<div class="wait">🔵 รออัปเดต</div>
+{% endif %}
+
+{% if val.get('alert') %}
+    {% if "🔔" in val.alert %}
+    <div class="alert">{{val.alert}}</div>
+    {% else %}
+    <div class="warn">{{val.alert}}</div>
+    {% endif %}
+{% endif %}
+
+<div class="buttons">
+
+<a class="btn statusbtn" href="/status/{{cage}}">
+📋 สถานะ
+</a>
+
+<a class="btn updatebtn" href="/update/{{cage}}">
+📡 อัปเดต
+</a>
+
+<a class="btn finishbtn" href="/finish/{{cage}}">
+✅ ส่งออก
+</a>
+
+</div>
+
+{% else %}
+<div class="empty">🟢 ว่าง</div>
+{% endif %}
+
+</div>
+
+    {% endfor %}
+{% endfor %}
+
+</div>
+
+</body>
+</html>

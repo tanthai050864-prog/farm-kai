@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{
+font-family:Segoe UI;
+background:#002c7a;
+padding:20px;
+margin:0;
+color:white;
+}
+
+.back{
+position:fixed;
+top:15px;
+left:15px;
+background:white;
+color:#002c7a;
+padding:12px 18px;
+border-radius:14px;
+text-decoration:none;
+font-weight:bold;
+}
+
+h1{
+text-align:center;
+margin:70px 0 30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+color:#002c7a;
+padding:25px;
+border-radius:24px;
+box-shadow:0 15px 30px rgba(0,0,0,.25);
+text-align:center;
+}
+
+.big{
+font-size:34px;
+font-weight:bold;
+margin-top:10px;
+}
+
+.chartbox{
+background:white;
+padding:25px;
+border-radius:24px;
+}
+</style>
+</head>
+<body>
+
+<a class="back" href="/">⬅ กลับ</a>
+
+<h1>📊 KPI Dashboard 90 วัน</h1>
+
+<div class="grid">
+
+<div class="card">
+🐔 ฝากผสมทั้งหมด
+<div class="big">{{customers}}</div>
+</div>
+
+<div class="card">
+🐣 ลูกไก่เกิด
+<div class="big">{{born}}</div>
+</div>
+
+<div class="card">
+✅ ผ่าน KPI
+<div class="big">{{passed}}</div>
+</div>
+
+<div class="card">
+⚠️ ใกล้ครบกำหนด
+<div class="big">{{warning}}</div>
+</div>
+
+<div class="card">
+❌ ไม่ผ่าน KPI
+<div class="big">{{failed}}</div>
+</div>
+
+</div>
+
+<div class="chartbox">
+<canvas id="chart"></canvas>
+</div>
+
+<script>
+new Chart(document.getElementById('chart'),{
+type:'line',
+data:{
+labels:['ผ่าน KPI','ใกล้ครบ','ไม่ผ่าน'],
+datasets:[{
+label:'จำนวน',
+data:[
+{{passed}},
+{{warning}},
+{{failed}}
+],
+fill:false,
+tension:.3
+}]
+}
+});
+</script>
+
+</body>
+</html>
