@@ -38,7 +38,14 @@ def check_alert(status):
         return f"⏳ อีก {diff} วัน ถึงกำหนดเช็คเชื้อ"
     except:
         return None
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
+@app.after_request
+def no_cache(response):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 @app.route('/')
 def home():
@@ -140,13 +147,60 @@ def update(cage):
     return render_template("update.html",cage=cage,data=cages[cage])
 
 
+def get_stage(data):
+
+    if not data:
+        return "1-2"
+
+    status = data.get("status", {})
+    inject = status.get("inject_date")
+
+    if not inject:
+        return "1-2"
+
+    try:
+        d,m,y = map(int, inject.split("/"))
+
+        if y > 2500:
+            y -= 543
+
+        start = datetime(y,m,d)
+
+        days = (datetime.now() - start).days
+
+        if days <= 14:
+            return "1-2"
+        elif days <= 28:
+            return "3-4"
+        elif days <= 56:
+            return "5-8"
+        elif days <= 84:
+            return "9-12"
+        else:
+            return "done"
+
+    except:
+        return "1-2"
+
+
 @app.route('/status/<cage>')
 def status(cage):
+
     data = cages.get(cage)
+
+    if not data:
+        return redirect('/zones')
+
+    if "status" not in data:
+        data["status"] = {}
+
+    stage = get_stage(data)
+
     return render_template(
         'status.html',
         cage=cage,
-        data=data
+        data=data,
+        stage=stage
     )
 
 @app.route('/history/<cage>')
