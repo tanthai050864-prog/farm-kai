@@ -31,7 +31,6 @@ body{
     padding:12px;
     margin:8px 0;
     border-radius:12px;
-    transition:.3s;
 }
 
 .sidebar a:hover{
@@ -44,7 +43,7 @@ body{
 }
 
 .header{
-    font-size:32px;
+    font-size:30px;
     font-weight:bold;
     margin-bottom:25px;
 }
@@ -59,47 +58,33 @@ body{
     background:#2b3648;
     border-radius:22px;
     padding:22px;
-    box-shadow:0 0 15px rgba(0,0,0,.25);
 }
 
 .card h3{
-    margin-top:0;
     color:#4fc3f7;
 }
 
 .big{
-    font-size:36px;
+    font-size:30px;
     font-weight:bold;
 }
 
-.good{color:#00e676;}
-.warn{color:#ff9800;}
-.bad{color:#ff5252;}
-
 .timeline{
-    margin-top:40px;
+    margin-top:30px;
 }
 
 .step{
+    background:#2b3648;
     padding:18px;
-    margin:16px 0;
-    background:#243247;
+    margin:14px 0;
     border-left:6px solid #4fc3f7;
-    border-radius:16px;
-    font-size:18px;
-    cursor:pointer;
-    transition:.3s;
+    border-radius:14px;
 }
 
-.step:hover{
-    transform:translateX(10px);
-    background:#32435c;
-}
-
-.step small{
-    display:block;
-    margin-top:8px;
-    color:#ccc;
+.day{
+    font-size:22px;
+    font-weight:bold;
+    color:#4fc3f7;
 }
 
 .back{
@@ -120,10 +105,6 @@ body{
 <div class="sidebar">
     <h2>🐔 FARM</h2>
     <a href="/">Dashboard</a>
-    <a href="#">Health</a>
-    <a href="#">Alerts</a>
-    <a href="#">Timeline</a>
-    <a href="#">History</a>
 </div>
 
 <a class="back" href="javascript:history.back()">⬅ กลับ</a>
@@ -135,20 +116,13 @@ body{
 <div class="grid">
 
 <div class="card">
-<h3>Health</h3>
-<div class="big good">92%</div>
-สถานะปกติ
-</div>
-
-<div class="card">
 <h3>จำนวนไข่</h3>
 <div class="big">{{data.status.get('eggs','0')}}</div>
-กำลังฟัก
 </div>
 
 <div class="card">
 <h3>เช็คเชื้อ</h3>
-<div class="big warn">{{data.status.get('check_result','รอเช็ค')}}</div>
+<div class="big">{{data.status.get('check_result','รอเช็ค')}}</div>
 </div>
 
 <div class="card">
@@ -156,46 +130,35 @@ body{
 {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
 </div>
 
-<div class="card">
-<h3>ข้อมูลลูกค้า</h3>
-👤 {{data.customer}}<br><br>
-📞 {{data.phone}}
-</div>
-
-<div class="card">
-<h3>พ่อแม่พันธุ์</h3>
-🐔 {{data.mother}}<br>
-🐓 {{data.father}}
-</div>
-
 </div>
 
 <div class="timeline">
+
 <h2>📋 Timeline ติดตาม</h2>
 
 <div class="step">
-🥚 <b>7 วันแรก</b>
-<small>รับไข่เข้า / ตรวจสภาพไข่ / คัดไข่เสีย</small>
+<div class="day">7 วัน</div>
+🥚 ไข่เริ่มนิ่ง / ตรวจความสมบูรณ์
 </div>
 
 <div class="step">
-💉 <b>15 วัน</b>
-<small>ฉีดเชื้อ / ตรวจความสมบูรณ์ / บันทึกข้อมูล</small>
+<div class="day">15 วัน</div>
+🧪 เช็คเชื้อครั้งแรก
 </div>
 
 <div class="step">
-🔥 <b>30 วัน</b>
-<small>เริ่มกกไข่ / คุมอุณหภูมิ / เฝ้าระวัง</small>
+<div class="day">30 วัน</div>
+🔥 เริ่มกกไข่ / ตรวจพัฒนา
 </div>
 
 <div class="step">
-🧪 <b>60 วัน</b>
-<small>ตรวจเชื้อ / เช็คการพัฒนา / วิเคราะห์ผล</small>
+<div class="day">60 วัน</div>
+🐣 ลูกเริ่มสมบูรณ์
 </div>
 
 <div class="step">
-🐣 <b>90 วัน</b>
-<small>พร้อมฟัก / สรุปผล / ส่งมอบลูกค้า</small>
+<div class="day">90 วัน</div>
+✅ พร้อมฟัก / เตรียมออก
 </div>
 
 </div>
