@@ -2,70 +2,169 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
-font-family:Segoe UI;
-background:#002c7a;
-padding:30px;
-margin:0;
-color:white;
+    margin:0;
+    font-family:'Segoe UI';
+    background:#1f2a3d;
+    color:white;
 }
+
+.sidebar{
+    position:fixed;
+    width:220px;
+    height:100%;
+    background:#182232;
+    padding:25px;
+}
+
+.sidebar h2{
+    color:#4fc3f7;
+}
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:12px;
+    margin:8px 0;
+    border-radius:12px;
+}
+
+.sidebar a:hover{
+    background:#263548;
+}
+
+.main{
+    margin-left:250px;
+    padding:30px;
+}
+
+.header{
+    font-size:30px;
+    font-weight:bold;
+    margin-bottom:25px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:22px;
+}
+
 .card{
-background:white;
-color:#002c7a;
-max-width:850px;
-margin:auto;
-padding:35px;
-border-radius:28px;
+    background:#2b3648;
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 0 15px rgba(0,0,0,.25);
 }
-.row{
-padding:14px 0;
-border-bottom:1px solid #ddd;
+
+.card h3{
+    margin-top:0;
+    color:#4fc3f7;
 }
+
+.big{
+    font-size:30px;
+    font-weight:bold;
+}
+
+.good{color:#00e676;}
+.warn{color:#ff9800;}
+.bad{color:#ff5252;}
+
+.timeline{
+    margin-top:20px;
+}
+
+.step{
+    padding:12px;
+    border-left:4px solid #4fc3f7;
+    margin:10px 0;
+    background:#1f2a3d;
+    border-radius:12px;
+}
+
 .back{
-position:fixed;
-top:15px;
-left:15px;
-background:white;
-color:#002c7a;
-padding:12px 18px;
-border-radius:14px;
-text-decoration:none;
-font-weight:bold;
-}
-.update{
-color:#ff6600;
-font-weight:bold;
-font-size:18px;
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#4fc3f7;
+    color:black;
+    padding:12px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:bold;
 }
 </style>
 </head>
 <body>
 
+<div class="sidebar">
+    <h2>🐔 FARM</h2>
+    <a href="/">Dashboard</a>
+    <a href="#">Health</a>
+    <a href="#">Alerts</a>
+    <a href="#">Timeline</a>
+    <a href="#">History</a>
+</div>
+
 <a class="back" href="javascript:history.back()">⬅ กลับ</a>
 
+<div class="main">
+
+<div class="header">{{cage}}</div>
+
+<div class="grid">
+
 <div class="card">
+<h3>Health</h3>
+<div class="big good">92%</div>
+สถานะปกติ
+</div>
 
-<h1>📋 {{cage}}</h1>
+<div class="card">
+<h3>จำนวนไข่</h3>
+<div class="big">{{data.status.get('eggs','0')}}</div>
+กำลังฟัก
+</div>
 
-<div class="row update">
-🕒 อัปเดตล่าสุด:
+<div class="card">
+<h3>เช็คเชื้อ</h3>
+<div class="big warn">{{data.status.get('check_result','รอเช็ค')}}</div>
+</div>
+
+<div class="card">
+<h3>อัปเดตล่าสุด</h3>
 {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
 </div>
 
-<div class="row">👤 {{data.customer}}</div>
-<div class="row">🐔 แม่พันธุ์: {{data.mother}}</div>
-<div class="row">🐓 พ่อพันธุ์: {{data.father}}</div>
-<div class="row">📞 {{data.phone}}</div>
+<div class="card">
+<h3>ข้อมูลลูกค้า</h3>
+👤 {{data.customer}}<br><br>
+📞 {{data.phone}}
+</div>
 
-<div class="row">📅 วันที่ฉีด: {{data.status.get('inject_date','-')}}</div>
-<div class="row">💉 ครั้งที่: {{data.status.get('inject_count','-')}}</div>
-<div class="row">🥚 จำนวนไข่: {{data.status.get('eggs','-')}}</div>
-<div class="row">🐔 วันที่กกไข่: {{data.status.get('brooding','-')}}</div>
-<div class="row">🧪 เช็คเชื้อ: {{data.status.get('check_result','-')}}</div>
-<div class="row">📝 {{data.status.get('note','-')}}</div>
+<div class="card">
+<h3>พ่อแม่พันธุ์</h3>
+🐔 {{data.mother}}<br>
+🐓 {{data.father}}
+</div>
+
+</div>
+
+<div class="timeline">
+<h2>📋 Timeline ติดตาม</h2>
+
+<div class="step">🥚 รับไข่เข้า : {{data.status.get('inject_date','-')}}</div>
+<div class="step">💉 ฉีดเชื้อ : {{data.status.get('inject_count','-')}}</div>
+<div class="step">🔥 เริ่มกกไข่ : {{data.status.get('brooding','-')}}</div>
+<div class="step">🧪 ตรวจเชื้อ : {{data.status.get('check_result','-')}}</div>
+<div class="step">📝 หมายเหตุ : {{data.status.get('note','-')}}</div>
+
+</div>
 
 </div>
 
