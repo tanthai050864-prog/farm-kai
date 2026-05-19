@@ -5,91 +5,124 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
+
+*{
 margin:0;
-font-family:Segoe UI;
-background:#f8fafc;
-padding:30px;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#0f172a,#1e3a8a);
+min-height:100vh;
+padding:50px;
+color:white;
 }
 
 .wrap{
-max-width:1300px;
+max-width:1400px;
 margin:auto;
 }
 
 .top{
-background:white;
-padding:25px;
-border-radius:24px;
-box-shadow:0 10px 30px rgba(0,0,0,.06);
+backdrop-filter:blur(18px);
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.12);
+padding:35px;
+border-radius:28px;
+box-shadow:0 15px 45px rgba(0,0,0,.25);
 }
 
 h1{
-margin:0;
-color:#2563eb;
+font-size:56px;
+font-weight:800;
+letter-spacing:2px;
+color:#60a5fa;
+margin-bottom:35px;
 }
 
 .timeline{
 display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:35px;
-gap:15px;
+gap:18px;
 }
 
 .step{
 flex:1;
-padding:18px;
-text-align:center;
-background:#e5e7eb;
-border-radius:18px;
+padding:24px;
+border-radius:22px;
 cursor:pointer;
-font-weight:bold;
-transition:.25s;
+text-align:center;
+font-size:22px;
+font-weight:700;
+transition:.35s;
+backdrop-filter:blur(10px);
 }
 
 .step:hover{
-transform:translateY(-5px);
+transform:translateY(-8px) scale(1.03);
 }
 
 .done{
-background:#22c55e;
-color:white;
+background:linear-gradient(135deg,#22c55e,#16a34a);
+box-shadow:0 10px 25px rgba(34,197,94,.35);
 }
 
 .now{
-background:#2563eb;
-color:white;
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+box-shadow:0 10px 25px rgba(59,130,246,.45);
+animation:pulse 2s infinite;
 }
 
 .wait{
-background:#cbd5e1;
+background:rgba(255,255,255,.10);
+color:#cbd5e1;
+}
+
+@keyframes pulse{
+0%{box-shadow:0 0 0 rgba(59,130,246,.5);}
+50%{box-shadow:0 0 35px rgba(59,130,246,.7);}
+100%{box-shadow:0 0 0 rgba(59,130,246,.5);}
 }
 
 .detail{
-margin-top:30px;
-background:white;
-padding:30px;
-border-radius:24px;
-box-shadow:0 10px 30px rgba(0,0,0,.06);
-font-size:20px;
-line-height:2;
+margin-top:35px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border-radius:30px;
+padding:45px;
+box-shadow:0 18px 45px rgba(0,0,0,.22);
+min-height:320px;
+transition:.35s;
 }
 
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-font-weight:bold;
-color:#2563eb;
+.title{
+font-size:34px;
+font-weight:800;
+margin-bottom:25px;
+color:#60a5fa;
 }
+
+.info{
+font-size:24px;
+line-height:2;
+color:#f8fafc;
+}
+
+.tag{
+display:inline-block;
+padding:10px 20px;
+border-radius:18px;
+background:rgba(255,255,255,.12);
+margin-top:18px;
+font-size:18px;
+}
+
 </style>
 </head>
 <body>
 
 <div class="wrap">
-
-<a class="back" href="javascript:history.back()">⬅ กลับ</a>
 
 <div class="top">
 
@@ -97,11 +130,25 @@ color:#2563eb;
 
 <div class="timeline">
 
-<div class="step done" onclick="show(1)">✅ สัปดาห์ 1-2</div>
-<div class="step done" onclick="show(2)">✅ สัปดาห์ 3-4</div>
-<div class="step now" onclick="show(3)">🔵 สัปดาห์ 5-8</div>
-<div class="step wait" onclick="show(4)">⏳ สัปดาห์ 9-12</div>
-<div class="step wait" onclick="show(5)">🐣 ครบกำหนด</div>
+<div class="step done" onclick="show(1)">
+✅ สัปดาห์ 1-2
+</div>
+
+<div class="step done" onclick="show(2)">
+🥚 สัปดาห์ 3-4
+</div>
+
+<div class="step now" onclick="show(3)">
+🔥 สัปดาห์ 5-8
+</div>
+
+<div class="step wait" onclick="show(4)">
+🧪 สัปดาห์ 9-12
+</div>
+
+<div class="step wait" onclick="show(5)">
+🐣 ครบกำหนด
+</div>
 
 </div>
 
@@ -109,10 +156,15 @@ color:#2563eb;
 
 <div class="detail" id="detail">
 
-<b>🔥 สัปดาห์ 5-8</b><br>
-กำลังกกไข่<br>
-ควบคุมอุณหภูมิและติดตามความชื้น<br>
-อีก 12 วันเข้าสู่การเช็คเชื้อ
+<div class="title">💉 สัปดาห์ 1-2</div>
+
+<div class="info">
+ฉีดผสมเรียบร้อย<br>
+วันที่ฉีด: {{data.status.get('inject_date','-')}}<br>
+จำนวนครั้ง: {{data.status.get('inject_count','-')}} ครั้ง
+</div>
+
+<div class="tag">เริ่มต้นวงจรการฟัก</div>
 
 </div>
 
@@ -126,43 +178,58 @@ let d=document.getElementById("detail");
 
 if(step==1){
 d.innerHTML=`
-<b>💉 สัปดาห์ 1-2</b><br>
+<div class="title">💉 สัปดาห์ 1-2</div>
+<div class="info">
 ฉีดผสมเรียบร้อย<br>
 วันที่ฉีด: {{data.status.get('inject_date','-')}}<br>
 จำนวนครั้ง: {{data.status.get('inject_count','-')}} ครั้ง
+</div>
+<div class="tag">เริ่มต้นวงจรการฟัก</div>
 `;
 }
 
 if(step==2){
 d.innerHTML=`
-<b>🥚 สัปดาห์ 3-4</b><br>
-ได้ไข่ทั้งหมด: {{data.status.get('eggs','0')}} ฟอง<br>
-คัดสมบูรณ์แล้ว
+<div class="title">🥚 สัปดาห์ 3-4</div>
+<div class="info">
+ได้ไข่ทั้งหมด {{data.status.get('eggs','0')}} ฟอง<br>
+คัดสมบูรณ์เรียบร้อย
+</div>
+<div class="tag">ระยะสร้างผลผลิต</div>
 `;
 }
 
 if(step==3){
 d.innerHTML=`
-<b>🔥 สัปดาห์ 5-8</b><br>
+<div class="title">🔥 สัปดาห์ 5-8</div>
+<div class="info">
 กำลังกกไข่<br>
-ติดตามอุณหภูมิ / ความชื้น<br>
+ควบคุมอุณหภูมิ / ความชื้น<br>
 อีก 12 วันเข้าสู่เช็คเชื้อ
+</div>
+<div class="tag">สถานะปัจจุบัน</div>
 `;
 }
 
 if(step==4){
 d.innerHTML=`
-<b>🧪 สัปดาห์ 9-12</b><br>
-เช็คเชื้อ<br>
-ผลล่าสุด: {{data.status.get('check_result','รอตรวจ')}}
+<div class="title">🧪 สัปดาห์ 9-12</div>
+<div class="info">
+ผลเชื้อ: {{data.status.get('check_result','รอตรวจ')}}<br>
+เตรียมเข้าสู่การฟัก
+</div>
+<div class="tag">ตรวจคุณภาพ</div>
 `;
 }
 
 if(step==5){
 d.innerHTML=`
-<b>🐣 ครบกำหนด</b><br>
+<div class="title">🐣 ครบกำหนด</div>
+<div class="info">
 ลูกไก่เกิดแล้ว<br>
 เข้าสู่ระบบอนุบาล
+</div>
+<div class="tag">เสร็จสมบูรณ์</div>
 `;
 }
 
