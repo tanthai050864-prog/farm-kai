@@ -31,6 +31,7 @@ body{
     padding:12px;
     margin:8px 0;
     border-radius:12px;
+    transition:.3s;
 }
 
 .sidebar a:hover{
@@ -43,7 +44,7 @@ body{
 }
 
 .header{
-    font-size:30px;
+    font-size:32px;
     font-weight:bold;
     margin-bottom:25px;
 }
@@ -67,7 +68,7 @@ body{
 }
 
 .big{
-    font-size:30px;
+    font-size:36px;
     font-weight:bold;
 }
 
@@ -76,15 +77,29 @@ body{
 .bad{color:#ff5252;}
 
 .timeline{
-    margin-top:20px;
+    margin-top:40px;
 }
 
 .step{
-    padding:12px;
-    border-left:4px solid #4fc3f7;
-    margin:10px 0;
-    background:#1f2a3d;
-    border-radius:12px;
+    padding:18px;
+    margin:16px 0;
+    background:#243247;
+    border-left:6px solid #4fc3f7;
+    border-radius:16px;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.step:hover{
+    transform:translateX(10px);
+    background:#32435c;
+}
+
+.step small{
+    display:block;
+    margin-top:8px;
+    color:#ccc;
 }
 
 .back{
@@ -158,11 +173,30 @@ body{
 <div class="timeline">
 <h2>📋 Timeline ติดตาม</h2>
 
-<div class="step">🥚 รับไข่เข้า : {{data.status.get('inject_date','-')}}</div>
-<div class="step">💉 ฉีดเชื้อ : {{data.status.get('inject_count','-')}}</div>
-<div class="step">🔥 เริ่มกกไข่ : {{data.status.get('brooding','-')}}</div>
-<div class="step">🧪 ตรวจเชื้อ : {{data.status.get('check_result','-')}}</div>
-<div class="step">📝 หมายเหตุ : {{data.status.get('note','-')}}</div>
+<div class="step">
+🥚 <b>7 วันแรก</b>
+<small>รับไข่เข้า / ตรวจสภาพไข่ / คัดไข่เสีย</small>
+</div>
+
+<div class="step">
+💉 <b>15 วัน</b>
+<small>ฉีดเชื้อ / ตรวจความสมบูรณ์ / บันทึกข้อมูล</small>
+</div>
+
+<div class="step">
+🔥 <b>30 วัน</b>
+<small>เริ่มกกไข่ / คุมอุณหภูมิ / เฝ้าระวัง</small>
+</div>
+
+<div class="step">
+🧪 <b>60 วัน</b>
+<small>ตรวจเชื้อ / เช็คการพัฒนา / วิเคราะห์ผล</small>
+</div>
+
+<div class="step">
+🐣 <b>90 วัน</b>
+<small>พร้อมฟัก / สรุปผล / ส่งมอบลูกค้า</small>
+</div>
 
 </div>
 

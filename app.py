@@ -142,8 +142,12 @@ def update(cage):
 
 @app.route('/status/<cage>')
 def status(cage):
-    return render_template("status.html",cage=cage,data=cages[cage])
-
+    data = cages.get(cage)
+    return render_template(
+        'status.html',
+        cage=cage,
+        data=data
+    )
 
 @app.route('/history/<cage>')
 def history(cage):
