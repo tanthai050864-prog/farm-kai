@@ -2,238 +2,202 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
-
 body{
-background:linear-gradient(135deg,#0f172a,#1e3a8a);
-min-height:100vh;
-padding:50px;
-color:white;
+    margin:0;
+    font-family:'Segoe UI';
+    background:#eef4ff;
+    color:#111;
 }
 
 .wrap{
-max-width:1400px;
-margin:auto;
+    max-width:1700px;
+    margin:auto;
+    padding:30px;
 }
 
 .top{
-backdrop-filter:blur(18px);
-background:rgba(255,255,255,.08);
-border:1px solid rgba(255,255,255,.12);
-padding:35px;
-border-radius:28px;
-box-shadow:0 15px 45px rgba(0,0,0,.25);
+    background:white;
+    border-radius:28px;
+    padding:35px;
+    box-shadow:0 10px 35px rgba(0,0,0,.08);
 }
 
 h1{
-font-size:56px;
-font-weight:800;
-letter-spacing:2px;
-color:#60a5fa;
-margin-bottom:35px;
-}
-
-.timeline{
-display:flex;
-gap:18px;
-}
-
-.step{
-flex:1;
-padding:24px;
-border-radius:22px;
-cursor:pointer;
-text-align:center;
-font-size:22px;
-font-weight:700;
-transition:.35s;
-backdrop-filter:blur(10px);
-}
-
-.step:hover{
-transform:translateY(-8px) scale(1.03);
-}
-
-.done{
-background:linear-gradient(135deg,#22c55e,#16a34a);
-box-shadow:0 10px 25px rgba(34,197,94,.35);
-}
-
-.now{
-background:linear-gradient(135deg,#3b82f6,#2563eb);
-box-shadow:0 10px 25px rgba(59,130,246,.45);
-animation:pulse 2s infinite;
-}
-
-.wait{
-background:rgba(255,255,255,.10);
-color:#cbd5e1;
-}
-
-@keyframes pulse{
-0%{box-shadow:0 0 0 rgba(59,130,246,.5);}
-50%{box-shadow:0 0 35px rgba(59,130,246,.7);}
-100%{box-shadow:0 0 0 rgba(59,130,246,.5);}
-}
-
-.detail{
-margin-top:35px;
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(20px);
-border-radius:30px;
-padding:45px;
-box-shadow:0 18px 45px rgba(0,0,0,.22);
-min-height:320px;
-transition:.35s;
-}
-
-.title{
-font-size:34px;
-font-weight:800;
-margin-bottom:25px;
-color:#60a5fa;
+    font-size:58px;
+    margin:0;
+    color:#3164ff;
 }
 
 .info{
-font-size:24px;
-line-height:2;
-color:#f8fafc;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:25px;
 }
 
-.tag{
-display:inline-block;
-padding:10px 20px;
+.info div{
+    background:#f6f8fc;
+    padding:22px;
+    border-radius:18px;
+    font-size:22px;
+}
+
+.weeks{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-top:35px;
+}
+
+.week{
+    padding:24px;
+    border-radius:22px;
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.done{background:#28c45a;color:white;}
+.now{background:#3164ff;color:white;}
+.wait{background:#d8e4ff;color:#234;}
+
+.week:hover{
+transform:translateY(-6px);
+}
+
+.detail{
+    margin-top:35px;
+    background:white;
+    border-radius:30px;
+    padding:45px;
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.big{
+    font-size:130px;
+    font-weight:bold;
+    margin:25px 0;
+}
+
+.good{color:#28c45a;}
+.bad{color:#ff3d3d;}
+.nowtxt{color:#3164ff;}
+
+.note{
+    font-size:28px;
+    margin:20px 0;
+}
+
+.alert{
+    color:#ff3d3d;
+    font-weight:bold;
+}
+
+.ok{
+    color:#28c45a;
+    font-weight:bold;
+}
+
+.back{
+position:fixed;
+top:25px;
+right:25px;
+background:#3164ff;
+color:white;
+padding:18px 28px;
 border-radius:18px;
-background:rgba(255,255,255,.12);
-margin-top:18px;
-font-size:18px;
+text-decoration:none;
+font-size:22px;
+font-weight:bold;
 }
-
 </style>
 </head>
 <body>
 
+<a class="back" href="javascript:history.back()">กลับ</a>
+
 <div class="wrap">
 
 <div class="top">
-
 <h1>{{cage}}</h1>
 
-<div class="timeline">
-
-<div class="step done" onclick="show(1)">
-✅ สัปดาห์ 1-2
-</div>
-
-<div class="step done" onclick="show(2)">
-🥚 สัปดาห์ 3-4
-</div>
-
-<div class="step now" onclick="show(3)">
-🔥 สัปดาห์ 5-8
-</div>
-
-<div class="step wait" onclick="show(4)">
-🧪 สัปดาห์ 9-12
-</div>
-
-<div class="step wait" onclick="show(5)">
-🐣 ครบกำหนด
-</div>
-
-</div>
-
-</div>
-
-<div class="detail" id="detail">
-
-<div class="title">💉 สัปดาห์ 1-2</div>
-
 <div class="info">
-ฉีดผสมเรียบร้อย<br>
-วันที่ฉีด: {{data.status.get('inject_date','-')}}<br>
-จำนวนครั้ง: {{data.status.get('inject_count','-')}} ครั้ง
+<div>👤 {{data.customer}}</div>
+<div>📞 {{data.phone}}</div>
+<div>🐔 {{data.mother}}</div>
+<div>🐓 {{data.father}}</div>
 </div>
 
-<div class="tag">เริ่มต้นวงจรการฟัก</div>
-
+<div class="weeks">
+<div class="week done" onclick="showWeek(1)">1-2</div>
+<div class="week done" onclick="showWeek(2)">3-4</div>
+<div class="week now" onclick="showWeek(3)">5-8</div>
+<div class="week wait" onclick="showWeek(4)">9-12</div>
 </div>
+</div>
+
+<div class="detail" id="detail"></div>
 
 </div>
 
 <script>
 
-function show(step){
+const eggs={{data.status.get('eggs',0)}};
 
-let d=document.getElementById("detail");
+function showWeek(w){
 
-if(step==1){
-d.innerHTML=`
-<div class="title">💉 สัปดาห์ 1-2</div>
-<div class="info">
-ฉีดผสมเรียบร้อย<br>
-วันที่ฉีด: {{data.status.get('inject_date','-')}}<br>
-จำนวนครั้ง: {{data.status.get('inject_count','-')}} ครั้ง
+let html='';
+
+if(w==1){
+html=`
+<h2>สัปดาห์ 1-2 : ฉีดผสม + เก็บไข่</h2>
+<div class="big good">${eggs}</div>
+<div class="note">จำนวนไข่</div>
+<div class="${eggs>=6?'ok':'alert'}">
+${eggs>=6?'ผ่านเกณฑ์':'ต่ำกว่าเกณฑ์ ต้องตรวจแม่ไก่'}
 </div>
-<div class="tag">เริ่มต้นวงจรการฟัก</div>
+<p>ฉีดวันที่ : {{data.status.get('inject_date','-')}}</p>
+<p>จำนวนฉีด : {{data.status.get('inject_count','-')}} ครั้ง</p>
 `;
 }
 
-if(step==2){
-d.innerHTML=`
-<div class="title">🥚 สัปดาห์ 3-4</div>
-<div class="info">
-ได้ไข่ทั้งหมด {{data.status.get('eggs','0')}} ฟอง<br>
-คัดสมบูรณ์เรียบร้อย
-</div>
-<div class="tag">ระยะสร้างผลผลิต</div>
+if(w==2){
+html=`
+<h2>สัปดาห์ 3-4 : ตรวจจำนวนไข่</h2>
+<div class="big ${eggs>=6?'good':'bad'}">${eggs}</div>
+<div class="note">ไข่สะสม</div>
+<p>เกณฑ์ขั้นต่ำ 6 ฟอง</p>
 `;
 }
 
-if(step==3){
-d.innerHTML=`
-<div class="title">🔥 สัปดาห์ 5-8</div>
-<div class="info">
-กำลังกกไข่<br>
-ควบคุมอุณหภูมิ / ความชื้น<br>
-อีก 12 วันเข้าสู่เช็คเชื้อ
-</div>
-<div class="tag">สถานะปัจจุบัน</div>
+if(w==3){
+html=`
+<h2>สัปดาห์ 5-8 : กำลังกกไข่</h2>
+<div class="big nowtxt">LIVE</div>
+<div class="note">ควบคุมอุณหภูมิ + ความชื้น</div>
+<p>เริ่มกก : {{data.status.get('brooding','-')}}</p>
+<p>อีก 12 วันเช็คเชื้อ</p>
 `;
 }
 
-if(step==4){
-d.innerHTML=`
-<div class="title">🧪 สัปดาห์ 9-12</div>
-<div class="info">
-ผลเชื้อ: {{data.status.get('check_result','รอตรวจ')}}<br>
-เตรียมเข้าสู่การฟัก
-</div>
-<div class="tag">ตรวจคุณภาพ</div>
+if(w==4){
+html=`
+<h2>สัปดาห์ 9-12 : ตรวจเชื้อ + เตรียมฟัก</h2>
+<div class="big">🐣</div>
+<p>ผลเช็ค : {{data.status.get('check_result','รอเช็ค')}}</p>
+<p>{{data.status.get('note','-')}}</p>
 `;
 }
 
-if(step==5){
-d.innerHTML=`
-<div class="title">🐣 ครบกำหนด</div>
-<div class="info">
-ลูกไก่เกิดแล้ว<br>
-เข้าสู่ระบบอนุบาล
-</div>
-<div class="tag">เสร็จสมบูรณ์</div>
-`;
+document.getElementById('detail').innerHTML=html;
 }
 
-}
+showWeek(3);
 
 </script>
 
