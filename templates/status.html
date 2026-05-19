@@ -9,87 +9,71 @@ body{
 margin:0;
 font-family:Segoe UI;
 background:#f8fafc;
-text-align:center;
-color:#222;
+padding:30px;
 }
 
 .wrap{
-max-width:1100px;
+max-width:1300px;
 margin:auto;
-padding:40px;
+}
+
+.top{
+background:white;
+padding:25px;
+border-radius:24px;
+box-shadow:0 10px 30px rgba(0,0,0,.06);
 }
 
 h1{
-color:#2563eb;
-margin-bottom:30px;
-}
-
-.wheel{
-width:500px;
-height:500px;
-margin:auto;
-border-radius:50%;
-position:relative;
-background:#eef2ff;
-box-shadow:0 20px 40px rgba(0,0,0,.08);
-}
-
-.center{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:220px;
-height:220px;
-border-radius:50%;
-background:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-}
-
-.center h2{
 margin:0;
-font-size:52px;
 color:#2563eb;
 }
 
-.center p{
-margin:5px 0;
-font-size:18px;
+.timeline{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:35px;
+gap:15px;
 }
 
-.week{
-position:absolute;
-width:70px;
-height:70px;
-border-radius:50%;
-background:#cbd5e1;
-display:flex;
-justify-content:center;
-align-items:center;
+.step{
+flex:1;
+padding:18px;
+text-align:center;
+background:#e5e7eb;
+border-radius:18px;
 cursor:pointer;
 font-weight:bold;
-transition:.3s;
+transition:.25s;
 }
 
-.week.active{
+.step:hover{
+transform:translateY(-5px);
+}
+
+.done{
+background:#22c55e;
+color:white;
+}
+
+.now{
 background:#2563eb;
 color:white;
-transform:scale(1.15);
-box-shadow:0 0 20px rgba(37,99,235,.35);
 }
 
-.card{
-margin-top:40px;
+.wait{
+background:#cbd5e1;
+}
+
+.detail{
+margin-top:30px;
 background:white;
-padding:25px;
-border-radius:25px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-font-size:18px;
-text-align:left;
+padding:30px;
+border-radius:24px;
+box-shadow:0 10px 30px rgba(0,0,0,.06);
+font-size:20px;
+line-height:2;
 }
 
 .back{
@@ -107,102 +91,83 @@ color:#2563eb;
 
 <a class="back" href="javascript:history.back()">⬅ กลับ</a>
 
+<div class="top">
+
 <h1>{{cage}}</h1>
 
-<div class="wheel" id="wheel">
+<div class="timeline">
 
-<div class="center">
-<h2 id="weekNum">1</h2>
-<p>สัปดาห์ปัจจุบัน</p>
-<p id="phase">ฉีดผสม</p>
+<div class="step done" onclick="show(1)">✅ สัปดาห์ 1-2</div>
+<div class="step done" onclick="show(2)">✅ สัปดาห์ 3-4</div>
+<div class="step now" onclick="show(3)">🔵 สัปดาห์ 5-8</div>
+<div class="step wait" onclick="show(4)">⏳ สัปดาห์ 9-12</div>
+<div class="step wait" onclick="show(5)">🐣 ครบกำหนด</div>
+
 </div>
 
 </div>
 
-<div class="card" id="detail">
-💉 เริ่มฉีดผสมและติดตามอาการ
-</div>
+<div class="detail" id="detail">
 
-<div class="card">
-👤 {{data.customer}}<br>
-📞 {{data.phone}}<br>
-🥚 {{data.status.get('eggs','0')}} ฟอง<br>
-📅 เริ่มฉีด: {{data.status.get('inject_date','-')}}<br>
-🕒 อัปเดตล่าสุด: {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+<b>🔥 สัปดาห์ 5-8</b><br>
+กำลังกกไข่<br>
+ควบคุมอุณหภูมิและติดตามความชื้น<br>
+อีก 12 วันเข้าสู่การเช็คเชื้อ
+
 </div>
 
 </div>
 
 <script>
 
-const injectDate = new Date("{{data.status.get('inject_date','2026-01-01')}}");
-const today = new Date();
+function show(step){
 
-const diff = Math.floor((today - injectDate)/(1000*60*60*24));
-let currentWeek = Math.floor(diff/7)+1;
+let d=document.getElementById("detail");
 
-if(currentWeek<1) currentWeek=1;
-if(currentWeek>12) currentWeek=12;
-
-const phases = {
-1:"ฉีดผสม",
-2:"ฉีดผสม",
-3:"เริ่มได้ไข่",
-4:"ได้ไข่",
-5:"กกไข่",
-6:"กกไข่",
-7:"กกไข่",
-8:"กกไข่",
-9:"เช็คเชื้อ",
-10:"เช็คเชื้อ",
-11:"พร้อมฟัก",
-12:"อนุบาล"
-};
-
-const detailText = {
-1:"💉 เริ่มฉีดผสม",
-2:"💉 ติดตามการตอบสนอง",
-3:"🥚 เริ่มได้ไข่",
-4:"🥚 ตรวจความสมบูรณ์ไข่",
-5:"🔥 เริ่มกกไข่",
-6:"🔥 ควบคุมอุณหภูมิ",
-7:"🔥 ติดตามพัฒนา",
-8:"🔥 ใกล้เช็คเชื้อ",
-9:"🧪 เช็คเชื้อรอบแรก",
-10:"🧪 ประเมินฟัก",
-11:"🐣 พร้อมฟัก",
-12:"🐥 เกิดและอนุบาล"
-};
-
-document.getElementById("weekNum").innerHTML=currentWeek;
-document.getElementById("phase").innerHTML=phases[currentWeek];
-document.getElementById("detail").innerHTML=detailText[currentWeek];
-
-const wheel=document.getElementById("wheel");
-
-for(let i=1;i<=12;i++){
-
-let angle=(i*30)-90;
-let x=210+190*Math.cos(angle*Math.PI/180);
-let y=210+190*Math.sin(angle*Math.PI/180);
-
-let div=document.createElement("div");
-div.className="week";
-if(i===currentWeek) div.classList.add("active");
-
-div.style.left=x+"px";
-div.style.top=y+"px";
-div.innerHTML=i;
-
-div.onclick=function(){
-document.getElementById("weekNum").innerHTML=i;
-document.getElementById("phase").innerHTML=phases[i];
-document.getElementById("detail").innerHTML=detailText[i];
+if(step==1){
+d.innerHTML=`
+<b>💉 สัปดาห์ 1-2</b><br>
+ฉีดผสมเรียบร้อย<br>
+วันที่ฉีด: {{data.status.get('inject_date','-')}}<br>
+จำนวนครั้ง: {{data.status.get('inject_count','-')}} ครั้ง
+`;
 }
 
-wheel.appendChild(div);
+if(step==2){
+d.innerHTML=`
+<b>🥚 สัปดาห์ 3-4</b><br>
+ได้ไข่ทั้งหมด: {{data.status.get('eggs','0')}} ฟอง<br>
+คัดสมบูรณ์แล้ว
+`;
+}
+
+if(step==3){
+d.innerHTML=`
+<b>🔥 สัปดาห์ 5-8</b><br>
+กำลังกกไข่<br>
+ติดตามอุณหภูมิ / ความชื้น<br>
+อีก 12 วันเข้าสู่เช็คเชื้อ
+`;
+}
+
+if(step==4){
+d.innerHTML=`
+<b>🧪 สัปดาห์ 9-12</b><br>
+เช็คเชื้อ<br>
+ผลล่าสุด: {{data.status.get('check_result','รอตรวจ')}}
+`;
+}
+
+if(step==5){
+d.innerHTML=`
+<b>🐣 ครบกำหนด</b><br>
+ลูกไก่เกิดแล้ว<br>
+เข้าสู่ระบบอนุบาล
+`;
+}
 
 }
+
 </script>
 
 </body>
