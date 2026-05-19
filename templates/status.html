@@ -6,161 +6,145 @@
 
 <style>
 body{
-    margin:0;
-    font-family:'Segoe UI';
-    background:#1f2a3d;
-    color:white;
+margin:0;
+font-family:Segoe UI;
+background:#f5f7fb;
+color:#333;
 }
 
-.sidebar{
-    position:fixed;
-    width:220px;
-    height:100%;
-    background:#182232;
-    padding:25px;
+.container{
+max-width:950px;
+margin:auto;
+padding:30px;
 }
 
-.sidebar h2{
-    color:#4fc3f7;
+.top{
+background:white;
+padding:25px;
+border-radius:25px;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+margin-bottom:30px;
 }
 
-.sidebar a{
-    display:block;
-    color:white;
-    text-decoration:none;
-    padding:12px;
-    margin:8px 0;
-    border-radius:12px;
+h1{
+margin:0;
+color:#3f51b5;
+font-size:34px;
 }
 
-.sidebar a:hover{
-    background:#263548;
+.progress{
+height:18px;
+background:#ddd;
+border-radius:20px;
+overflow:hidden;
+margin:25px 0 10px;
 }
 
-.main{
-    margin-left:250px;
-    padding:30px;
+.bar{
+height:100%;
+width:65%;
+background:linear-gradient(90deg,#7c4dff,#42a5f5);
 }
 
-.header{
-    font-size:30px;
-    font-weight:bold;
-    margin-bottom:25px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:22px;
+.week{
+display:flex;
+justify-content:space-between;
+font-size:14px;
+font-weight:bold;
+color:#666;
 }
 
 .card{
-    background:#2b3648;
-    border-radius:22px;
-    padding:22px;
+background:white;
+padding:20px;
+border-radius:20px;
+margin:18px 0;
+box-shadow:0 6px 16px rgba(0,0,0,.06);
 }
 
-.card h3{
-    color:#4fc3f7;
+.done{
+color:#00c853;
+font-weight:bold;
+font-size:22px;
 }
 
-.big{
-    font-size:30px;
-    font-weight:bold;
+.now{
+color:#ff9800;
+font-weight:bold;
+font-size:22px;
 }
 
-.timeline{
-    margin-top:30px;
-}
-
-.step{
-    background:#2b3648;
-    padding:18px;
-    margin:14px 0;
-    border-left:6px solid #4fc3f7;
-    border-radius:14px;
-}
-
-.day{
-    font-size:22px;
-    font-weight:bold;
-    color:#4fc3f7;
+.wait{
+color:#aaa;
+font-weight:bold;
+font-size:22px;
 }
 
 .back{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:#4fc3f7;
-    color:black;
-    padding:12px 18px;
-    border-radius:12px;
-    text-decoration:none;
-    font-weight:bold;
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+font-weight:bold;
+color:#3f51b5;
 }
 </style>
 </head>
 <body>
 
-<div class="sidebar">
-    <h2>🐔 FARM</h2>
-    <a href="/">Dashboard</a>
-</div>
+<div class="container">
 
 <a class="back" href="javascript:history.back()">⬅ กลับ</a>
 
-<div class="main">
+<div class="top">
 
-<div class="header">{{cage}}</div>
+<h1>{{cage}}</h1>
+<p>ระบบติดตามวงจรฟักไข่แบบเรียลไทม์</p>
 
-<div class="grid">
+<div class="progress">
+<div class="bar"></div>
+</div>
+
+<div class="week">
+<span>1-2</span>
+<span>3-4</span>
+<span>5-8</span>
+<span>9-12</span>
+<span>ครบกำหนด</span>
+</div>
+
+</div>
 
 <div class="card">
-<h3>จำนวนไข่</h3>
-<div class="big">{{data.status.get('eggs','0')}}</div>
+<div class="done">✅ สัปดาห์ 1-2</div>
+💉 ฉีดผสมเรียบร้อย
 </div>
 
 <div class="card">
-<h3>เช็คเชื้อ</h3>
-<div class="big">{{data.status.get('check_result','รอเช็ค')}}</div>
+<div class="done">✅ สัปดาห์ 3-4</div>
+🥚 ได้ไข่และตรวจสมบูรณ์
 </div>
 
 <div class="card">
-<h3>อัปเดตล่าสุด</h3>
-{{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+<div class="now">🟠 สัปดาห์ 5-8 (ปัจจุบัน)</div>
+🔥 กำลังกกไข่ / เฝ้าติดตามอุณหภูมิ
 </div>
 
+<div class="card">
+<div class="wait">⏳ สัปดาห์ 9-12</div>
+🧪 เช็คเชื้อ + เตรียมพร้อมฟัก
 </div>
 
-<div class="timeline">
-
-<h2>📋 Timeline ติดตาม</h2>
-
-<div class="step">
-<div class="day">7 วัน</div>
-🥚 ไข่เริ่มนิ่ง / ตรวจความสมบูรณ์
+<div class="card">
+<div class="wait">⏳ ครบกำหนด</div>
+🐣 เกิดแล้ว → เข้าอนุบาลไก่
 </div>
 
-<div class="step">
-<div class="day">15 วัน</div>
-🧪 เช็คเชื้อครั้งแรก
-</div>
-
-<div class="step">
-<div class="day">30 วัน</div>
-🔥 เริ่มกกไข่ / ตรวจพัฒนา
-</div>
-
-<div class="step">
-<div class="day">60 วัน</div>
-🐣 ลูกเริ่มสมบูรณ์
-</div>
-
-<div class="step">
-<div class="day">90 วัน</div>
-✅ พร้อมฟัก / เตรียมออก
-</div>
-
+<div class="card">
+<b>ข้อมูลลูกค้า</b><br><br>
+👤 {{data.customer}}<br>
+📞 {{data.phone}}<br>
+🥚 จำนวนไข่: {{data.status.get('eggs','0')}}<br>
+🕒 อัปเดตล่าสุด: {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
 </div>
 
 </div>
