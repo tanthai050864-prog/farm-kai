@@ -5,201 +5,194 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;700&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
 body{
-    margin:0;
-    font-family:'Segoe UI';
-    background:#eef4ff;
-    color:#111;
+background:#f8fbff;
+padding:40px;
+color:#183153;
 }
 
 .wrap{
-    max-width:1700px;
-    margin:auto;
-    padding:30px;
+max-width:1700px;
+margin:auto;
 }
 
-.top{
-    background:white;
-    border-radius:28px;
-    padding:35px;
-    box-shadow:0 10px 35px rgba(0,0,0,.08);
+.card{
+background:white;
+border-radius:28px;
+padding:35px;
+box-shadow:0 18px 50px rgba(37,99,235,.08);
+margin-bottom:35px;
 }
 
-h1{
-    font-size:58px;
-    margin:0;
-    color:#3164ff;
+.title{
+font-size:60px;
+font-weight:700;
+color:#2563eb;
+margin-bottom:25px;
 }
 
 .info{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-    margin-top:25px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:18px;
 }
 
-.info div{
-    background:#f6f8fc;
-    padding:22px;
-    border-radius:18px;
-    font-size:22px;
+.box{
+background:#eef5ff;
+padding:22px;
+border-radius:20px;
+font-size:22px;
+font-weight:500;
 }
 
-.weeks{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-    margin-top:35px;
+.tabs{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:18px;
+margin-bottom:35px;
 }
 
-.week{
-    padding:24px;
-    border-radius:22px;
-    text-align:center;
-    font-size:30px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.25s;
+.tab{
+padding:24px;
+border-radius:22px;
+text-align:center;
+font-size:22px;
+font-weight:700;
 }
 
-.done{background:#28c45a;color:white;}
-.now{background:#3164ff;color:white;}
-.wait{background:#d8e4ff;color:#234;}
+.active{
+background:#2563eb;
+color:white;
+box-shadow:0 12px 25px rgba(37,99,235,.25);
+}
 
-.week:hover{
-transform:translateY(-6px);
+.done{
+background:#16a34a;
+color:white;
+}
+
+.wait{
+background:#dbeafe;
+color:#2563eb;
 }
 
 .detail{
-    margin-top:35px;
-    background:white;
-    border-radius:30px;
-    padding:45px;
-    box-shadow:0 12px 35px rgba(0,0,0,.08);
+font-size:28px;
+line-height:2;
 }
 
 .big{
-    font-size:130px;
-    font-weight:bold;
-    margin:25px 0;
+font-size:100px;
+font-weight:700;
+color:#2563eb;
 }
 
-.good{color:#28c45a;}
-.bad{color:#ff3d3d;}
-.nowtxt{color:#3164ff;}
-
-.note{
-    font-size:28px;
-    margin:20px 0;
-}
-
-.alert{
-    color:#ff3d3d;
-    font-weight:bold;
-}
-
-.ok{
-    color:#28c45a;
-    font-weight:bold;
-}
+.good{color:#16a34a;}
+.bad{color:#dc2626;}
 
 .back{
 position:fixed;
-top:25px;
-right:25px;
-background:#3164ff;
+top:30px;
+right:30px;
+background:#2563eb;
 color:white;
-padding:18px 28px;
+padding:16px 25px;
 border-radius:18px;
 text-decoration:none;
-font-size:22px;
 font-weight:bold;
+font-size:18px;
 }
 </style>
 </head>
 <body>
 
-<a class="back" href="javascript:history.back()">กลับ</a>
+<a class="back" href="javascript:history.back()">← กลับ</a>
 
 <div class="wrap">
 
-<div class="top">
-<h1>{{cage}}</h1>
+<div class="card">
+<div class="title">{{cage}}</div>
 
 <div class="info">
-<div>👤 {{data.customer}}</div>
-<div>📞 {{data.phone}}</div>
-<div>🐔 {{data.mother}}</div>
-<div>🐓 {{data.father}}</div>
-</div>
-
-<div class="weeks">
-<div class="week done" onclick="showWeek(1)">1-2</div>
-<div class="week done" onclick="showWeek(2)">3-4</div>
-<div class="week now" onclick="showWeek(3)">5-8</div>
-<div class="week wait" onclick="showWeek(4)">9-12</div>
+<div class="box">👤 {{data.customer}}</div>
+<div class="box">📞 {{data.phone}}</div>
+<div class="box">🐔 {{data.mother}}</div>
+<div class="box">🐓 {{data.father}}</div>
 </div>
 </div>
 
-<div class="detail" id="detail"></div>
+<div class="tabs">
+
+<div class="tab {% if stage=='1-2' %}active{% else %}done{% endif %}">
+สัปดาห์ที่ 1-2
+</div>
+
+<div class="tab {% if stage=='3-4' %}active{% elif stage in ['5-8','9-12','done'] %}done{% else %}wait{% endif %}">
+สัปดาห์ที่ 3-4
+</div>
+
+<div class="tab {% if stage=='5-8' %}active{% elif stage in ['9-12','done'] %}done{% else %}wait{% endif %}">
+สัปดาห์ที่ 5-8
+</div>
+
+<div class="tab {% if stage=='9-12' %}active{% elif stage=='done' %}done{% else %}wait{% endif %}">
+สัปดาห์ที่ 9-12
+</div>
+
+<div class="tab {% if stage=='done' %}active{% else %}wait{% endif %}">
+ครบกำหนดฟัก
+</div>
 
 </div>
 
-<script>
+<div class="card">
 
-const eggs={{data.status.get('eggs',0)}};
+<div class="detail">
 
-function showWeek(w){
+<h2>รายละเอียดการติดตาม {{stage}}</h2><br>
 
-let html='';
+💉 ฉีดผสม:  
+<b>{{data.status.get('inject_count','0')}}</b> ครั้ง<br>
 
-if(w==1){
-html=`
-<h2>สัปดาห์ 1-2 : ฉีดผสม + เก็บไข่</h2>
-<div class="big good">${eggs}</div>
-<div class="note">จำนวนไข่</div>
-<div class="${eggs>=6?'ok':'alert'}">
-${eggs>=6?'ผ่านเกณฑ์':'ต่ำกว่าเกณฑ์ ต้องตรวจแม่ไก่'}
+📅 วันที่เริ่มฉีด:  
+<b>{{data.status.get('inject_date','-')}}</b><br>
+
+🥚 จำนวนไข่สะสม
+
+<div class="big">
+{{data.status.get('eggs','0')}}
 </div>
-<p>ฉีดวันที่ : {{data.status.get('inject_date','-')}}</p>
-<p>จำนวนฉีด : {{data.status.get('inject_count','-')}} ครั้ง</p>
-`;
-}
 
-if(w==2){
-html=`
-<h2>สัปดาห์ 3-4 : ตรวจจำนวนไข่</h2>
-<div class="big ${eggs>=6?'good':'bad'}">${eggs}</div>
-<div class="note">ไข่สะสม</div>
-<p>เกณฑ์ขั้นต่ำ 6 ฟอง</p>
-`;
-}
+{% if data.status.get('eggs',0)|int >= 6 %}
+<span class="good">✅ ผ่านเกณฑ์ (ปกติ)</span>
+{% else %}
+<span class="bad">⚠ ต่ำกว่าเกณฑ์ ต้องตรวจแม่ไก่</span>
+{% endif %}
 
-if(w==3){
-html=`
-<h2>สัปดาห์ 5-8 : กำลังกกไข่</h2>
-<div class="big nowtxt">LIVE</div>
-<div class="note">ควบคุมอุณหภูมิ + ความชื้น</div>
-<p>เริ่มกก : {{data.status.get('brooding','-')}}</p>
-<p>อีก 12 วันเช็คเชื้อ</p>
-`;
-}
+<br><br>
 
-if(w==4){
-html=`
-<h2>สัปดาห์ 9-12 : ตรวจเชื้อ + เตรียมฟัก</h2>
-<div class="big">🐣</div>
-<p>ผลเช็ค : {{data.status.get('check_result','รอเช็ค')}}</p>
-<p>{{data.status.get('note','-')}}</p>
-`;
-}
+📝 หมายเหตุ<br>
+{{data.status.get('note','-')}}
 
-document.getElementById('detail').innerHTML=html;
-}
+<br><br>
 
-showWeek(3);
+🕒 อัปเดตล่าสุด<br>
+{{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
 
-</script>
+</div>
+
+</div>
+
+</div>
 
 </body>
 </html>
