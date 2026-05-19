@@ -2,168 +2,211 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
 body{
 margin:0;
-font-family:Segoe UI;
-background:#f5f7fb;
-text-align:center;
+font-family:Inter,Segoe UI;
+background:#0f172a;
+color:white;
 }
 
-.container{
-max-width:1000px;
+.wrap{
+max-width:1300px;
 margin:auto;
-padding:30px;
+padding:40px;
+display:grid;
+grid-template-columns:500px 1fr;
+gap:40px;
+}
+
+.panel{
+background:#1e293b;
+border-radius:30px;
+padding:35px;
+box-shadow:0 20px 40px rgba(0,0,0,.35);
+}
+
+.ring{
+width:360px;
+height:360px;
+border-radius:50%;
+margin:auto;
+background:
+conic-gradient(
+#06b6d4 0% 20%,
+#10b981 20% 40%,
+#f59e0b 40% 60%,
+#8b5cf6 60% 80%,
+#ef4444 80% 100%);
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+cursor:pointer;
+}
+
+.inner{
+width:230px;
+height:230px;
+background:#0f172a;
+border-radius:50%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+.day{
+font-size:60px;
+font-weight:800;
+}
+
+.phase{
+color:#38bdf8;
+font-size:20px;
+}
+
+.item{
+padding:22px;
+margin:18px 0;
+border-radius:20px;
+background:#334155;
+cursor:pointer;
+transition:.25s;
+}
+
+.item:hover{
+transform:translateX(10px);
+background:#475569;
+}
+
+.active{
+background:#06b6d4;
+color:black;
+font-weight:bold;
 }
 
 h1{
-color:#3f51b5;
+margin:0 0 25px;
+font-size:34px;
 }
 
-.wheel{
-width:380px;
-height:380px;
-border-radius:50%;
-margin:40px auto;
-position:relative;
-background:conic-gradient(
-#4caf50 0% 20%,
-#ff9800 20% 40%,
-#2196f3 40% 60%,
-#9c27b0 60% 80%,
-#f44336 80% 100%
-);
-box-shadow:0 10px 30px rgba(0,0,0,.15);
-}
-
-.center{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:170px;
-height:170px;
-background:white;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:24px;
-font-weight:bold;
-color:#3f51b5;
-}
-
-.dot{
-position:absolute;
-width:70px;
-height:70px;
-border-radius:50%;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-font-size:14px;
-font-weight:bold;
-box-shadow:0 4px 10px rgba(0,0,0,.15);
-transition:.3s;
-}
-
-.dot:hover{
-transform:scale(1.15);
-}
-
-.d1{top:20px;left:155px;}
-.d2{top:95px;right:15px;}
-.d3{bottom:95px;right:15px;}
-.d4{bottom:20px;left:155px;}
-.d5{bottom:95px;left:15px;}
-
-.card{
-background:white;
-padding:25px;
-border-radius:25px;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-margin-top:30px;
-text-align:left;
+.info{
+line-height:2;
+font-size:18px;
 }
 
 .back{
-display:inline-block;
-margin-bottom:20px;
+position:fixed;
+top:20px;
+left:20px;
+background:white;
+color:black;
+padding:12px 18px;
+border-radius:15px;
 text-decoration:none;
 font-weight:bold;
-color:#3f51b5;
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-
 <a class="back" href="javascript:history.back()">⬅ กลับ</a>
+
+<div class="wrap">
+
+<div class="panel">
+
+<div class="ring">
+<div class="inner">
+<div class="day" id="dayNum">45</div>
+<div class="phase" id="phaseName">กกไข่</div>
+</div>
+</div>
+
+</div>
+
+<div class="panel">
 
 <h1>{{cage}}</h1>
 
-<div class="wheel">
+<div class="item active" onclick="show(1)">💉 Week 1-2 ฉีดผสม</div>
+<div class="item" onclick="show(2)">🥚 Week 3-4 ได้ไข่</div>
+<div class="item" onclick="show(3)">🔥 Week 5-8 กกไข่</div>
+<div class="item" onclick="show(4)">🧪 Week 9-12 เช็คเชื้อ</div>
+<div class="item" onclick="show(5)">🐣 ครบกำหนด อนุบาล</div>
 
-<div class="center" id="title">สัปดาห์ 1-2</div>
+<div class="panel" style="margin-top:25px">
 
-<div class="dot d1" onclick="showStep(1)">1-2</div>
-<div class="dot d2" onclick="showStep(2)">3-4</div>
-<div class="dot d3" onclick="showStep(3)">5-8</div>
-<div class="dot d4" onclick="showStep(4)">9-12</div>
-<div class="dot d5" onclick="showStep(5)">ครบ</div>
-
+<div class="info" id="detail">
+กำลังควบคุมอุณหภูมิและติดตามการพัฒนาไข่
 </div>
 
-<div class="card" id="detail">
-💉 ฉีดผสมเรียบร้อย
-</div>
+<hr>
 
-<div class="card">
 👤 {{data.customer}}<br>
 📞 {{data.phone}}<br>
-🥚 จำนวนไข่: {{data.status.get('eggs','0')}}<br>
-🕒 อัปเดตล่าสุด: {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+🥚 {{data.status.get('eggs','0')}} ฟอง<br>
+🕒 {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+
+</div>
+
 </div>
 
 </div>
 
 <script>
-function showStep(step){
 
-let title=document.getElementById("title");
-let detail=document.getElementById("detail");
+function clearAll(){
+document.querySelectorAll('.item')
+.forEach(x=>x.classList.remove('active'))
+}
+
+function show(step){
+
+clearAll()
+
+let items=document.querySelectorAll('.item')
+items[step-1].classList.add('active')
+
+let d=document.getElementById('detail')
+let day=document.getElementById('dayNum')
+let phase=document.getElementById('phaseName')
 
 if(step==1){
-title.innerHTML="สัปดาห์ 1-2";
-detail.innerHTML="💉 ฉีดผสมเรียบร้อย";
+day.innerHTML="10"
+phase.innerHTML="ฉีดผสม"
+d.innerHTML="อยู่ช่วงกระตุ้นผสม";
 }
 
 if(step==2){
-title.innerHTML="สัปดาห์ 3-4";
-detail.innerHTML="🥚 ได้ไข่และตรวจสมบูรณ์";
+day.innerHTML="24"
+phase.innerHTML="ได้ไข่"
+d.innerHTML="เริ่มได้ไข่ ตรวจสมบูรณ์";
 }
 
 if(step==3){
-title.innerHTML="สัปดาห์ 5-8";
-detail.innerHTML="🔥 กำลังกกไข่ ติดตามอุณหภูมิ";
+day.innerHTML="45"
+phase.innerHTML="กกไข่"
+d.innerHTML="กำลังควบคุมอุณหภูมิและติดตามการพัฒนาไข่";
 }
 
 if(step==4){
-title.innerHTML="สัปดาห์ 9-12";
-detail.innerHTML="🧪 เช็คเชื้อ พร้อมฟัก";
+day.innerHTML="72"
+phase.innerHTML="เช็คเชื้อ"
+d.innerHTML="ตรวจเชื้อพร้อมเข้าสู่ระยะฟัก";
 }
 
 if(step==5){
-title.innerHTML="ครบกำหนด";
-detail.innerHTML="🐣 เกิดแล้ว เข้าอนุบาลไก่";
+day.innerHTML="90"
+phase.innerHTML="อนุบาล"
+d.innerHTML="ลูกไก่เกิดแล้ว พร้อมอนุบาล";
 }
 
 }
+
 </script>
 
 </body>
