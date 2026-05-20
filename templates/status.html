@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -6,49 +5,219 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{font-family:Segoe UI;background:#f5f9ff;padding:30px}
-.card{max-width:1600px;margin:auto;background:white;padding:40px;border-radius:30px}
-.title{font-size:45px;color:#1565c0;font-weight:bold}
-.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:15px;margin:25px 0}
-.tab{padding:20px;border-radius:20px;text-align:center;font-weight:bold}
-.done{background:#dbeafe}
-.active{background:#1565c0;color:white}
-.wait{background:#eee}
-.row{font-size:25px;margin:18px 0}
-.big{font-size:90px;color:#1565c0;font-weight:bold}
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eef5ff,#dce9ff);
+min-height:100vh;
+padding:40px;
+color:#1d3557;
+}
+
+.wrap{
+max-width:1600px;
+margin:auto;
+}
+
+.back{
+position:fixed;
+top:25px;
+right:25px;
+background:linear-gradient(135deg,#377dff,#4da8ff);
+color:white;
+padding:18px 28px;
+border-radius:18px;
+text-decoration:none;
+font-weight:700;
+font-size:18px;
+box-shadow:0 15px 35px rgba(55,125,255,.25);
+transition:.25s;
+}
+.back:hover{
+transform:translateY(-4px);
+}
+
+.card{
+background:white;
+border-radius:30px;
+padding:40px;
+box-shadow:0 20px 50px rgba(0,0,0,.08);
+}
+
+.title{
+font-size:64px;
+font-weight:700;
+color:#2468e8;
+margin-bottom:25px;
+}
+
+.tabs{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:18px;
+margin-bottom:35px;
+}
+
+.tab{
+padding:24px;
+border-radius:22px;
+text-align:center;
+font-size:22px;
+font-weight:700;
+background:#eef3fa;
+box-shadow:inset 0 0 0 1px #dce6f7;
+transition:.25s;
+cursor:pointer;
+}
+
+.active{
+background:linear-gradient(135deg,#2468e8,#4da8ff);
+color:white;
+box-shadow:0 18px 35px rgba(36,104,232,.25);
+transform:translateY(-6px);
+}
+
+.panel{
+display:grid;
+grid-template-columns:350px 1fr;
+gap:35px;
+}
+
+.left{
+background:#f7fbff;
+border-radius:24px;
+padding:35px;
+text-align:center;
+}
+
+.big{
+font-size:140px;
+font-weight:700;
+color:#2468e8;
+line-height:1;
+}
+
+.eggs{
+font-size:30px;
+margin-top:15px;
+font-weight:600;
+}
+
+.right{
+background:#f7fbff;
+border-radius:24px;
+padding:35px;
+}
+
+.detail{
+font-size:24px;
+line-height:2;
+}
+
+.label{
+font-weight:700;
+color:#2468e8;
+}
+
+.good{
+color:#15b86a;
+font-weight:700;
+}
+
+.bad{
+color:#ff4d6d;
+font-weight:700;
+}
+
+.progress{
+height:20px;
+background:#dce8fa;
+border-radius:30px;
+margin-top:30px;
+overflow:hidden;
+}
+
+.fill{
+height:100%;
+width:{{ (days/90*100)|round }}%;
+background:linear-gradient(90deg,#2468e8,#4da8ff);
+}
+
+.footer{
+margin-top:25px;
+font-size:22px;
+color:#557;
+}
 </style>
 </head>
 <body>
+
+<a class="back" href="javascript:history.back()">← ย้อนกลับ</a>
+
+<div class="wrap">
 
 <div class="card">
 
 <div class="title">{{cage}}</div>
 
 <div class="tabs">
+<div class="tab {% if stage=='1-2' %}active{% endif %}">สัปดาห์ 1-2</div>
+<div class="tab {% if stage=='3-4' %}active{% endif %}">สัปดาห์ 3-4</div>
+<div class="tab {% if stage=='5-8' %}active{% endif %}">สัปดาห์ 5-8</div>
+<div class="tab {% if stage=='9-12' %}active{% endif %}">สัปดาห์ 9-12</div>
+<div class="tab {% if stage=='kpi' %}active{% endif %}">KPI 90 วัน</div>
+</div>
 
-<div class="tab {% if stage=='1-2' %}active{% elif days>14 %}done{% else %}wait{% endif %}">สัปดาห์ 1-2<br>Day {{days}}/14</div>
+<div class="panel">
 
-<div class="tab {% if stage=='3-4' %}active{% elif days>28 %}done{% else %}wait{% endif %}">สัปดาห์ 3-4<br>Day {{days}}/28</div>
+<div class="left">
+<div class="big">{{data.status.get('eggs','0')}}</div>
+<div class="eggs">🥚 ไข่สะสม</div>
+</div>
 
-<div class="tab {% if stage=='5-8' %}active{% elif days>56 %}done{% else %}wait{% endif %}">สัปดาห์ 5-8<br>Day {{days}}/56</div>
+<div class="right">
 
-<div class="tab {% if stage=='9-12' %}active{% elif days>84 %}done{% else %}wait{% endif %}">สัปดาห์ 9-12<br>Day {{days}}/84</div>
+<div class="detail">
+<div><span class="label">💉 ฉีดผสม:</span> {{data.status.get('inject_count','-')}} ครั้ง</div>
+<div><span class="label">📅 วันที่เริ่ม:</span> {{data.status.get('inject_date','-')}}</div>
+<div><span class="label">🧪 เช็คเชื้อ:</span> {{data.status.get('check_result','-')}}</div>
+<div><span class="label">📝 หมายเหตุ:</span> {{data.status.get('note','-')}}</div>
 
-<div class="tab {% if stage=='kpi' %}active{% elif days>90 %}done{% else %}wait{% endif %}">KPI 90 วัน<br>Day {{days}}/90</div>
+<div>
+<span class="label">📊 สถานะ:</span>
+{% if data.status.get('eggs',0)|int >= 6 %}
+<span class="good">ปกติ</span>
+{% else %}
+<span class="bad">ต่ำกว่าเกณฑ์</span>
+{% endif %}
+</div>
+
+<div><span class="label">⏱ ดำเนินมาแล้ว:</span> {{days}} วัน / 90 วัน</div>
 
 </div>
 
-<div class="big">{{data.status.get('eggs','0')}}</div>
+<div class="progress">
+<div class="fill"></div>
+</div>
 
-<div class="row">🥚 ไข่สะสม</div>
-<div class="row">💉 ฉีด {{data.status.get('inject_count','-')}} ครั้ง</div>
-<div class="row">📅 เริ่มฉีด {{data.status.get('inject_date','-')}}</div>
-<div class="row">🧪 เช็คเชื้อ {{data.status.get('check_result','-')}}</div>
-<div class="row">📝 {{data.status.get('note','-')}}</div>
-<div class="row">🕒 {{data.status.get('updated_at','-')}}</div>
+<div class="footer">
+อัปเดตล่าสุด : {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 </body>
 </html>
-```
