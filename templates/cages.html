@@ -2,10 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;500;700&display=swap');
 
 *{
 margin:0;
@@ -15,100 +15,63 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:
-linear-gradient(rgba(245,235,210,.88),rgba(230,214,180,.92)),
-url('https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1600&q=80');
-background-size:cover;
-background-attachment:fixed;
-padding:35px;
-min-height:100vh;
-color:#4a2f13;
-}
-
-.back{
-position:fixed;
-top:20px;
-left:20px;
-background:rgba(255,255,255,.85);
-backdrop-filter:blur(12px);
-padding:16px 24px;
-border-radius:18px;
-text-decoration:none;
-font-weight:700;
-color:#7a4d16;
-box-shadow:0 10px 30px rgba(80,40,0,.12);
+background:linear-gradient(135deg,#f7f3eb,#e5dccf);
+padding:40px;
+color:#2f2419;
 }
 
 h1{
-text-align:center;
-font-size:64px;
-margin-bottom:35px;
-color:#8b5a1e;
-text-shadow:0 3px 8px rgba(255,255,255,.55);
+font-size:48px;
+margin-bottom:30px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:22px;
+grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+gap:25px;
 }
 
 .card{
-background:rgba(255,250,240,.94);
-border:2px solid rgba(210,170,110,.25);
-border-radius:24px;
-padding:24px;
-box-shadow:
-0 18px 35px rgba(80,40,0,.08),
-inset 0 0 0 1px rgba(255,255,255,.4);
-transition:.28s;
-}
-
-.card:hover{
-transform:translateY(-8px);
-box-shadow:
-0 24px 45px rgba(80,40,0,.18);
+background:#fffaf2;
+border-radius:26px;
+padding:28px;
+box-shadow:0 18px 35px rgba(0,0,0,.08);
+border:1px solid #eadfce;
 }
 
 .cage{
-font-size:32px;
+font-size:34px;
 font-weight:700;
-color:#7a4d16;
-margin-bottom:14px;
+color:#6d4c2f;
+margin-bottom:15px;
 }
 
-.info{
+.customer{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.alert{
 font-size:18px;
-margin:8px 0;
-}
-
-.ok{
-color:#2e8b57;
-font-weight:700;
-}
-
-.wait{
-color:#c58b28;
-font-weight:700;
+color:#e67e22;
+margin-bottom:20px;
 }
 
 .btns{
 display:flex;
-gap:10px;
-margin-top:18px;
+gap:12px;
+flex-wrap:wrap;
 }
 
 .btn{
-flex:1;
-padding:14px;
+padding:14px 18px;
 border-radius:16px;
-text-align:center;
 text-decoration:none;
 font-weight:700;
 font-size:16px;
 color:white;
 transition:.25s;
-box-shadow:0 8px 20px rgba(0,0,0,.12);
+display:inline-block;
 }
 
 .btn:hover{
@@ -116,66 +79,70 @@ transform:translateY(-3px);
 }
 
 .status{
-background:linear-gradient(135deg,#8b5a1e,#c78a35);
+background:linear-gradient(135deg,#377dff,#4da8ff);
 }
 
 .update{
-background:linear-gradient(135deg,#3a9b55,#74d680);
+background:linear-gradient(135deg,#f39c12,#ffb347);
 }
 
 .finish{
-background:linear-gradient(135deg,#d94d35,#ff8a5c);
+background:linear-gradient(135deg,#2ecc71,#27ae60);
+}
+
+.back{
+position:fixed;
+top:25px;
+right:25px;
+background:#6d4c2f;
+color:white;
+padding:16px 24px;
+border-radius:18px;
+text-decoration:none;
+font-weight:700;
 }
 </style>
 </head>
 <body>
 
-<a class="back" href="/zones">⬅ กลับ</a>
+<a class="back" href="/zones">← กลับ</a>
 
 <h1>{{title}}</h1>
 
 <div class="grid">
 
-{% for gname,data in groups.items() %}
-    {% for cage,val in data.items() %}
+{% for k,v in groups[title].items() %}
+{% if v %}
 
 <div class="card">
 
-<h3>🐔 {{cage}}</h3>
+<div class="cage">{{k}}</div>
 
-{% if val %}
+<div class="customer">👤 {{v.customer}}</div>
 
-<div class="pass">🟢 KPI ทำงาน</div>
-<div>👤 {{val.customer}}</div>
-
-{% if val.status and val.status.get('inject_date') %}
-<div class="busy">🟡 กำลังผสม</div>
-<div>🥚 {{val.status.get('eggs',0)}}</div>
-<div>💉 ครั้งที่ {{val.status.get('inject_count','-')}}</div>
-{% else %}
-<div class="wait">🔵 รออัปเดต</div>
-{% endif %}
-
-{% if val.get('alert') %}
-    {% if "🔔" in val.alert %}
-    <div class="alert">{{val.alert}}</div>
-    {% else %}
-    <div class="warn">{{val.alert}}</div>
-    {% endif %}
-{% endif %}
+<div class="alert">
+{{v.alert if v.alert else "ปกติ"}}
+</div>
 
 <div class="btns">
-<a class="btn status" href="/status/{{k}}">📋 สถานะ</a>
-<a class="btn update" href="/update/{{k}}">🛠 อัปเดต</a>
-<a class="btn finish" href="/finish/{{k}}">✅ ส่งออก</a>
+
+<a href="{{ url_for('status', cage=k) }}" class="btn status">
+📋 สถานะ
+</a>
+
+<a href="{{ url_for('update', cage=k) }}" class="btn update">
+✏️ อัปเดต
+</a>
+
+<a href="{{ url_for('finish', cage=k) }}" class="btn finish">
+✅ จบงาน
+</a>
+
 </div>
-{% else %}
-<div class="empty">🟢 ว่าง</div>
+
+</div>
+
 {% endif %}
-
-</div>
-
-    {% endfor %}
 {% endfor %}
 
 </div>
