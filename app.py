@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+ยfrom flask import Flask, render_template, request, redirect
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -164,16 +164,15 @@ def update(cage):
 
     return render_template("update.html",cage=cage,data=cages[cage])
 
-
 @app.route('/status/<cage>')
 def status(cage):
 
-    data=cages.get(cage)
+    data = cages.get(cage)
 
     if not data:
         return redirect('/zones')
 
-    stage,days=get_stage(data)
+    stage,days = get_stage(data)
 
     return render_template(
         "status.html",
@@ -182,7 +181,6 @@ def status(cage):
         stage=stage,
         days=days
     )
-
 
 @app.route('/history/<cage>')
 def history(cage):
