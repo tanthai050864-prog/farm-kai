@@ -1,106 +1,144 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
 <title>ฝากผสม</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
-font-family:Segoe UI;
-background:linear-gradient(135deg,#0b3d91,#1e90ff);
-text-align:center;
-padding:50px;
-color:white;
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:
+radial-gradient(circle at top left,#1b4b2c,#102218 40%),
+linear-gradient(135deg,#08130d,#102218,#183926);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
+color:white;
 }
 
 .back-btn{
 position:fixed;
-top:10px;
-left:10px;
-background:white;
-color:#0b3d91;
-padding:6px 10px;
-border-radius:10px;
-font-size:13px;
+top:25px;
+left:25px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+color:white;
+padding:14px 22px;
+border-radius:18px;
 font-weight:700;
 text-decoration:none;
+border:1px solid rgba(255,255,255,.08);
+transition:.25s;
+}
+
+.back-btn:hover{
+transform:translateY(-4px);
 }
 
 .card{
-background:white;
-color:#0b3d91;
-width:500px;
-margin:auto;
-padding:40px;
-border-radius:24px;
-box-shadow:0 20px 40px rgba(0,0,0,.25);
+width:600px;
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(24px);
+border-radius:32px;
+padding:45px;
+border:1px solid rgba(255,255,255,.08);
+box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+h1{
+font-size:48px;
+margin-bottom:30px;
+text-align:center;
+}
+
+.label{
+font-size:16px;
+font-weight:600;
+margin-bottom:8px;
+display:block;
+opacity:.9;
 }
 
 input{
-width:90%;
+width:100%;
 padding:18px;
-margin:12px;
+margin-bottom:18px;
 border:none;
-border-radius:16px;
-background:#eef5ff;
+border-radius:18px;
+background:rgba(255,255,255,.08);
+color:white;
 font-size:16px;
 outline:none;
+border:1px solid rgba(255,255,255,.08);
+}
+
+input::placeholder{
+color:rgba(255,255,255,.65);
 }
 
 button{
-padding:18px 30px;
-background:#0b3d91;
-color:white;
+width:100%;
+padding:18px;
 border:none;
-border-radius:16px;
+border-radius:20px;
+background:linear-gradient(135deg,#2ecc71,#27ae60);
+color:white;
 font-size:18px;
+font-weight:700;
 cursor:pointer;
-transition:.3s;
-width:90%;
+transition:.25s;
+box-shadow:0 15px 35px rgba(46,204,113,.25);
 }
 
 button:hover{
-background:#1e90ff;
-transform:scale(1.05);
+transform:translateY(-5px);
+box-shadow:0 25px 45px rgba(46,204,113,.35);
 }
 
-/* mobile */
-@media(max-width:600px){
-.card{width:90%;padding:25px;}
-input,button{width:100%;}
+@media(max-width:700px){
+.card{
+width:100%;
+padding:28px;
 }
-
-@media(min-width:601px) and (max-width:1024px){
-.card{width:80%;}
+h1{
+font-size:34px;
+}
 }
 </style>
 </head>
 
 <body>
 
-<a href="/" class="back-btn">⬅</a>
+<a href="/" class="back-btn">⬅ กลับ</a>
 
 <div class="card">
-<h1>📥 ฝากผสม</h1>
+
+<h1>🐔 ฝากผสม</h1>
 
 <form method="POST">
 
-<div style="text-align:left; margin-bottom:10px;">
-<label style="font-weight:bold;">📅 วันที่รับเข้า</label>
-</div>
+<label class="label">📅 วันที่รับเข้า</label>
+<input type="date" name="date" required>
 
-<input type="date" name="date" style="
-">
 <input name="customer" placeholder="👤 ชื่อลูกค้า" required>
 <input name="mother" placeholder="🐓 แม่พันธุ์" required>
 <input name="father" placeholder="🦅 พ่อพันธุ์" required>
 <input name="phone" placeholder="📞 เบอร์โทร" required>
 
-<!-- 🔥 เพิ่ม field กัน future พัง -->
 <input type="hidden" name="status" value="new">
 
-<button>💾 บันทึก</button>
+<button>💾 บันทึกข้อมูล</button>
 
 </form>
 

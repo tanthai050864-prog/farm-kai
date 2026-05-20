@@ -2,10 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
 
 *{
 margin:0;
@@ -15,137 +15,156 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:linear-gradient(135deg,#f7f3eb,#e5dccf);
-padding:40px;
-color:#2f2419;
+background:linear-gradient(135deg,#071c34,#0d3b66,#1b6ca8);
+min-height:100vh;
+padding:35px;
+color:white;
+}
+
+.back{
+position:fixed;
+top:20px;
+left:20px;
+background:white;
+color:#0d3b66;
+padding:14px 22px;
+border-radius:16px;
+text-decoration:none;
+font-weight:700;
+box-shadow:0 8px 20px rgba(0,0,0,.25);
+z-index:999;
 }
 
 h1{
-font-size:48px;
-margin-bottom:30px;
+text-align:center;
+font-size:42px;
+margin-bottom:40px;
+font-weight:700;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(380px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
 gap:25px;
+max-width:1800px;
+margin:auto;
 }
 
 .card{
-background:#fffaf2;
-border-radius:26px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
 padding:28px;
-box-shadow:0 18px 35px rgba(0,0,0,.08);
-border:1px solid #eadfce;
+border-radius:28px;
+box-shadow:0 18px 40px rgba(0,0,0,.25);
+transition:.25s;
+}
+
+.card:hover{
+transform:translateY(-6px);
 }
 
 .cage{
 font-size:34px;
 font-weight:700;
-color:#6d4c2f;
-margin-bottom:15px;
+margin-bottom:14px;
+color:#8ed8ff;
 }
 
-.customer{
-font-size:20px;
+.empty{
+font-size:18px;
+opacity:.8;
+margin:20px 0;
+}
+
+.name{
+font-size:22px;
+font-weight:600;
 margin-bottom:8px;
 }
 
 .alert{
-font-size:18px;
-color:#e67e22;
-margin-bottom:20px;
+margin:12px 0;
+padding:14px;
+background:#ffd966;
+color:#333;
+border-radius:14px;
+font-weight:700;
 }
 
 .btns{
-display:flex;
+display:grid;
+grid-template-columns:repeat(3,1fr);
 gap:12px;
-flex-wrap:wrap;
+margin-top:18px;
 }
 
 .btn{
-padding:14px 18px;
-border-radius:16px;
 text-decoration:none;
+padding:16px;
+border-radius:16px;
 font-weight:700;
-font-size:16px;
+text-align:center;
 color:white;
 transition:.25s;
-display:inline-block;
 }
 
 .btn:hover{
-transform:translateY(-3px);
+transform:scale(1.05);
 }
 
-.status{
-background:linear-gradient(135deg,#377dff,#4da8ff);
-}
+.status{background:#1e90ff;}
+.update{background:#17c964;}
+.finish{background:#ff5b6e;}
 
-.update{
-background:linear-gradient(135deg,#f39c12,#ffb347);
+@media(max-width:768px){
+.btns{
+grid-template-columns:1fr;
 }
-
-.finish{
-background:linear-gradient(135deg,#2ecc71,#27ae60);
-}
-
-.back{
-position:fixed;
-top:25px;
-right:25px;
-background:#6d4c2f;
-color:white;
-padding:16px 24px;
-border-radius:18px;
-text-decoration:none;
-font-weight:700;
 }
 </style>
 </head>
 <body>
 
-<a class="back" href="/zones">← กลับ</a>
+<a class="back" href="/zones">⬅ กลับ</a>
 
 <h1>{{title}}</h1>
 
+{% for group,data in groups.items() %}
 <div class="grid">
 
-{% for k,v in groups[title].items() %}
-{% if v %}
-
+{% for cage,item in data.items() %}
 <div class="card">
 
-<div class="cage">{{k}}</div>
+<div class="cage">{{cage}}</div>
 
-<div class="customer">👤 {{v.customer}}</div>
+{% if item %}
 
-<div class="alert">
-{{v.alert if v.alert else "ปกติ"}}
-</div>
+<div class="name">👤 {{item.customer}}</div>
+<div>🐔 {{item.mother}}</div>
+<div>🐓 {{item.father}}</div>
+
+{% if item.alert %}
+<div class="alert">{{item.alert}}</div>
+{% endif %}
 
 <div class="btns">
-
-<a href="{{ url_for('status', cage=k) }}" class="btn status">
-📋 สถานะ
-</a>
-
-<a href="{{ url_for('update', cage=k) }}" class="btn update">
-✏️ อัปเดต
-</a>
-
-<a href="{{ url_for('finish', cage=k) }}" class="btn finish">
-✅ จบงาน
-</a>
-
+<a class="btn status" href="/status/{{cage}}">สถานะ</a>
+<a class="btn update" href="/update/{{cage}}">อัปเดต</a>
+<a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
 </div>
 
-</div>
+{% else %}
+
+<div class="empty">🟢 ล็อคว่าง</div>
 
 {% endif %}
+
+</div>
 {% endfor %}
 
 </div>
+{% endfor %}
 
 </body>
 </html>

@@ -1,44 +1,168 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
 body{
-font-family:Segoe UI;
-background:linear-gradient(135deg,#002c7a,#1e90ff);
-text-align:center;
-padding:80px;
+background:
+radial-gradient(circle at top left,#1b4b2c,#102218 40%),
+linear-gradient(135deg,#08130d,#102218,#183926);
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:40px;
 color:white;
 }
-.btn{
-display:block;
-width:90%;
-max-width:500px;
-margin:30px auto;
-padding:28px;
-background:white;
-color:#002c7a;
-font-size:24px;
-font-weight:bold;
-border-radius:24px;
-text-decoration:none;
-box-shadow:0 15px 30px rgba(0,0,0,.25);
+
+.wrap{
+width:100%;
+max-width:1200px;
 }
+
 .back{
-position:fixed;top:15px;left:15px;
-background:white;color:#002c7a;
-padding:12px 18px;border-radius:14px;text-decoration:none;
+position:fixed;
+top:25px;
+left:25px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+padding:14px 22px;
+border-radius:18px;
+text-decoration:none;
+color:white;
+font-weight:700;
+border:1px solid rgba(255,255,255,.08);
+transition:.25s;
+}
+
+.back:hover{
+transform:translateY(-4px);
+}
+
+h1{
+text-align:center;
+font-size:60px;
+margin-bottom:55px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:35px;
+}
+
+.btn{
+background:rgba(255,255,255,.06);
+backdrop-filter:blur(24px);
+padding:55px;
+border-radius:34px;
+text-decoration:none;
+color:white;
+border:1px solid rgba(255,255,255,.08);
+box-shadow:0 22px 55px rgba(0,0,0,.28);
+transition:.35s;
+display:block;
+position:relative;
+overflow:hidden;
+}
+
+.btn:before{
+content:'';
+position:absolute;
+top:-80px;
+right:-80px;
+width:180px;
+height:180px;
+background:rgba(255,255,255,.05);
+border-radius:50%;
+}
+
+.btn:hover{
+transform:translateY(-14px) scale(1.03);
+box-shadow:0 35px 70px rgba(0,0,0,.35);
+}
+
+.icon{
+font-size:80px;
+margin-bottom:22px;
+}
+
+.name{
+font-size:42px;
+font-weight:700;
+margin-bottom:14px;
+}
+
+.desc{
+font-size:18px;
+opacity:.8;
+line-height:1.7;
+}
+
+.f{
+border-left:8px solid #2ecc71;
+}
+
+.k{
+border-left:8px solid #3498db;
+}
+
+@media(max-width:700px){
+h1{
+font-size:38px;
+}
+
+.btn{
+padding:35px;
+}
+
+.name{
+font-size:30px;
+}
 }
 </style>
 </head>
+
 <body>
 
 <a class="back" href="/">⬅ กลับ</a>
 
-<h1>📡 เลือกโซน</h1>
+<div class="wrap">
 
-<a class="btn" href="/zone/F">🏠 โซน F</a>
-<a class="btn" href="/zone/K">🔐 โซน K</a>
+<h1>📡 เลือกโซนฟาร์ม</h1>
+
+<div class="grid">
+
+<a class="btn f" href="/zone/F">
+<div class="icon">🏠</div>
+<div class="name">โซน F</div>
+<div class="desc">
+พื้นที่ดูแลแม่พันธุ์และกระบวนการฝากผสม
+</div>
+</a>
+
+<a class="btn k" href="/zone/K">
+<div class="icon">🔐</div>
+<div class="name">โซน K</div>
+<div class="desc">
+ติดตามสถานะการผสม เช็คเชื้อ KPI และผลผลิต
+</div>
+</a>
+
+</div>
+
+</div>
 
 </body>
 </html>

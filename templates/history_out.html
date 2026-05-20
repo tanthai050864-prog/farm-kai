@@ -5,49 +5,111 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
-font-family:Segoe UI;
-background:#002c7a;
-padding:20px;
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:
+linear-gradient(rgba(20,35,20,.72),rgba(15,25,15,.8)),
+url('https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&w=1800&q=80');
+background-size:cover;
+background-attachment:fixed;
+min-height:100vh;
+padding:30px;
 color:white;
 }
 
 .back{
 position:fixed;
-top:15px;
-left:15px;
-background:white;
-color:#002c7a;
-padding:12px 18px;
-border-radius:14px;
+top:20px;
+left:20px;
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(14px);
+padding:14px 22px;
+border-radius:18px;
 text-decoration:none;
-font-weight:bold;
+color:white;
+font-weight:700;
+box-shadow:0 10px 25px rgba(0,0,0,.25);
+transition:.25s;
+}
+
+.back:hover{
+transform:translateY(-4px);
+background:rgba(255,255,255,.2);
+}
+
+.container{
+max-width:1600px;
+margin:auto;
+padding-top:80px;
 }
 
 h1{
 text-align:center;
-margin:70px 0 30px;
+font-size:52px;
+margin-bottom:35px;
+font-weight:700;
+text-shadow:0 8px 18px rgba(0,0,0,.35);
+}
+
+.table-wrap{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(18px);
+border-radius:28px;
+overflow:hidden;
+box-shadow:0 20px 50px rgba(0,0,0,.25);
 }
 
 table{
 width:100%;
 border-collapse:collapse;
-background:white;
-color:#002c7a;
-border-radius:20px;
-overflow:hidden;
-}
-
-th,td{
-padding:14px;
-border:1px solid #ddd;
-text-align:center;
 }
 
 th{
-background:#1e90ff;
-color:white;
+background:rgba(67,160,71,.9);
+padding:20px;
+font-size:18px;
+font-weight:700;
+}
+
+td{
+padding:18px;
+text-align:center;
+background:rgba(255,255,255,.08);
+border-bottom:1px solid rgba(255,255,255,.08);
+font-size:16px;
+}
+
+tr:hover td{
+background:rgba(255,255,255,.14);
+}
+
+.badge{
+background:#43a047;
+padding:8px 16px;
+border-radius:14px;
+font-weight:700;
+display:inline-block;
+}
+
+.empty{
+text-align:center;
+padding:70px;
+font-size:24px;
+font-weight:600;
+color:#ddd;
+}
+
+@media(max-width:900px){
+h1{font-size:34px;}
+th,td{font-size:14px;padding:12px;}
 }
 </style>
 </head>
@@ -55,15 +117,22 @@ color:white;
 
 <a class="back" href="/history_all">⬅ กลับ</a>
 
-<h1>📤 ประวัติส่งออก</h1>
+<div class="container">
+
+<h1>📤 ประวัติส่งออก Smart Farm</h1>
+
+<div class="table-wrap">
+
+{% if done %}
 
 <table>
 <tr>
-<th>ชื่อลูกค้า</th>
+<th>ลูกค้า</th>
 <th>แม่พันธุ์</th>
 <th>พ่อพันธุ์</th>
 <th>ลูกไก่เกิด</th>
 <th>วันที่ส่งออก</th>
+<th>สถานะ</th>
 </tr>
 
 {% for d in done %}
@@ -73,10 +142,23 @@ color:white;
 <td>{{d.father}}</td>
 <td>{{d.status.get('born_count','0')}}</td>
 <td>{{d.finish_date}}</td>
+<td><span class="badge">เสร็จสิ้น</span></td>
 </tr>
 {% endfor %}
 
 </table>
+
+{% else %}
+
+<div class="empty">
+ยังไม่มีประวัติส่งออก
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
 
 </body>
 </html>

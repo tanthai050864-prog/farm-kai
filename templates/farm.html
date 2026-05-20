@@ -1,62 +1,119 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
 margin:0;
-font-family:Segoe UI;
-background:linear-gradient(135deg,#0b3d91,#1e90ff);
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:
+linear-gradient(rgba(18,30,18,.75),rgba(12,20,12,.85)),
+url('https://images.unsplash.com/photo-1548550023-2bdb3c5beed7');
+background-size:cover;
+background-attachment:fixed;
+min-height:100vh;
+padding:40px;
 color:white;
-text-align:center;
-padding:60px;
 }
 
-/* 🐔 Title */
-.title{
-font-size:42px;
-margin-bottom:40px;
-text-shadow:0 6px 18px rgba(0,0,0,.3);
-}
-
-/* 🔘 menu */
-.menu{
-display:flex;
-flex-direction:column;
-gap:20px;
-max-width:400px;
-margin:auto;
-}
-
-.btn{
-background:white;
-color:#0b3d91;
-padding:18px;
-border-radius:20px;
-font-size:20px;
-font-weight:bold;
+.back{
+position:fixed;
+top:20px;
+left:20px;
+padding:14px 22px;
+border-radius:18px;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(14px);
+color:white;
 text-decoration:none;
-box-shadow:0 10px 25px rgba(0,0,0,.25);
-transition:.2s;
+font-weight:700;
 }
 
-.btn:hover{
-transform:scale(1.05);
-background:#f0f6ff;
+.wrap{
+max-width:1200px;
+margin:auto;
+padding-top:90px;
 }
 
-/* 📱 mobile */
-@media (max-width:600px){
-.title{font-size:28px;}
+h1{
+text-align:center;
+font-size:54px;
+margin-bottom:50px;
+text-shadow:0 8px 20px rgba(0,0,0,.4);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+gap:35px;
+}
+
+.card{
+background:rgba(255,255,255,.12);
+backdrop-filter:blur(16px);
+padding:55px;
+border-radius:30px;
+text-align:center;
+text-decoration:none;
+color:white;
+box-shadow:0 20px 40px rgba(0,0,0,.25);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+background:rgba(255,255,255,.18);
+}
+
+.icon{
+font-size:90px;
+margin-bottom:25px;
+}
+
+.title{
+font-size:34px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.sub{
+font-size:18px;
+opacity:.85;
 }
 </style>
-
 </head>
-
 <body>
 
-<h1 class="title">🐔 ไก่ฟาร์ม</h1>
+<a class="back" href="/">⬅ กลับ</a>
+
+<div class="wrap">
+
+<h1>🐓 ระบบจัดการไก่ฟาร์ม</h1>
+
+<div class="grid">
+
+<a class="card" href="/young">
+<div class="icon">🐔</div>
+<div class="title">ไก่รุ่น</div>
+<div class="sub">จัดการข้อมูลไก่รุ่นทั้งหมด</div>
+</a>
+
+<a class="card" href="/chicks">
+<div class="icon">🐣</div>
+<div class="title">ลูกไก่</div>
+<div class="sub">ติดตามจำนวนลูกไก่เกิดใหม่</div>
+</a>
+
+</div>
 
 </div>
 

@@ -5,81 +5,138 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
-font-family:Segoe UI;
-background:#0b3d91;
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
 margin:0;
-padding:30px;
-color:white;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#eef8f1,#dff0e3);
+padding:35px;
+color:#243d2e;
+}
+
+.wrap{
+max-width:1600px;
+margin:auto;
+}
+
+.top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:35px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.title{
+font-size:46px;
+font-weight:700;
+color:#2d5a3f;
 }
 
 .back{
-position:fixed;
-top:15px;
-left:15px;
 background:white;
-color:#0b3d91;
-padding:12px 18px;
-border-radius:14px;
+padding:14px 22px;
+border-radius:16px;
 text-decoration:none;
-font-weight:bold;
+color:#2d5a3f;
+font-weight:700;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+transition:.25s;
 }
 
-h1{
-text-align:center;
-margin-bottom:30px;
+.back:hover{
+transform:translateY(-4px);
 }
 
 .customer{
 background:white;
-color:#0b3d91;
-padding:25px;
-border-radius:24px;
-margin:25px auto;
-max-width:1200px;
-box-shadow:0 15px 30px rgba(0,0,0,.25);
+border-radius:30px;
+padding:35px;
+margin-bottom:28px;
+box-shadow:0 20px 40px rgba(0,0,0,.06);
 }
 
 .name{
-font-size:28px;
-font-weight:bold;
-margin-bottom:15px;
+font-size:30px;
+font-weight:700;
+color:#2d5a3f;
+margin-bottom:10px;
 }
 
 .info{
+font-size:18px;
+color:#666;
+margin-bottom:20px;
+}
+
+.section{
+font-size:20px;
+font-weight:700;
 margin-bottom:18px;
-font-size:16px;
+color:#4caf50;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(100px,1fr));
-gap:12px;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:14px;
 }
 
 .btn{
 display:block;
-background:#1e90ff;
+padding:18px;
+border-radius:18px;
+background:linear-gradient(145deg,#4caf50,#2d5a3f);
 color:white;
 text-decoration:none;
-padding:14px;
-border-radius:14px;
-font-weight:bold;
+font-weight:700;
 text-align:center;
+box-shadow:0 10px 20px rgba(76,175,80,.18);
+transition:.25s;
+}
+
+.btn:hover{
+transform:translateY(-5px);
 }
 
 .empty{
 text-align:center;
-font-size:22px;
-margin-top:60px;
+font-size:28px;
+padding:80px;
+background:white;
+border-radius:30px;
+box-shadow:0 20px 40px rgba(0,0,0,.06);
+color:#2d5a3f;
+}
+
+@media(max-width:900px){
+.title{
+font-size:34px;
+}
+.name{
+font-size:24px;
+}
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 </style>
 </head>
 <body>
 
-<a class="back" href="/">⬅ กลับ</a>
+<div class="wrap">
 
-<h1>📦 จัดการไก่เข้าล็อค</h1>
+<div class="top">
+<div class="title">📦 Smart Farm • จัดการไก่เข้าล็อค</div>
+<a class="back" href="/">← กลับ</a>
+</div>
 
 {% if waiting %}
 
@@ -94,7 +151,7 @@ margin-top:60px;
 🐔 {{item.mother}} × {{item.father}}
 </div>
 
-<h3>เลือกล็อคว่าง</h3>
+<div class="section">เลือกล็อคว่าง</div>
 
 <div class="grid">
 
@@ -121,6 +178,8 @@ margin-top:60px;
 </div>
 
 {% endif %}
+
+</div>
 
 </body>
 </html>

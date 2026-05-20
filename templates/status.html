@@ -15,10 +15,9 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:linear-gradient(135deg,#eef5ff,#dce9ff);
-min-height:100vh;
-padding:40px;
-color:#1d3557;
+background:linear-gradient(135deg,#eef8f1,#dff0e3);
+padding:35px;
+color:#243d2e;
 }
 
 .wrap{
@@ -26,185 +25,225 @@ max-width:1600px;
 margin:auto;
 }
 
-.back{
-position:fixed;
-top:25px;
-right:25px;
-background:linear-gradient(135deg,#377dff,#4da8ff);
-color:white;
-padding:18px 28px;
-border-radius:18px;
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+flex-wrap:wrap;
+gap:15px;
+}
+
+.title{
+font-size:50px;
+font-weight:700;
+color:#2d5a3f;
+}
+
+.actions{
+display:flex;
+gap:14px;
+}
+
+.btn{
+padding:14px 24px;
+border-radius:16px;
 text-decoration:none;
 font-weight:700;
-font-size:18px;
-box-shadow:0 15px 35px rgba(55,125,255,.25);
 transition:.25s;
 }
-.back:hover{
+
+.back{
+background:white;
+color:#2d5a3f;
+}
+
+.update{
+background:#4caf50;
+color:white;
+}
+
+.finish{
+background:#8b5e3c;
+color:white;
+}
+
+.btn:hover{
 transform:translateY(-4px);
+}
+
+.main{
+display:grid;
+grid-template-columns:360px 1fr;
+gap:28px;
+}
+
+.left{
+background:linear-gradient(145deg,#2d5a3f,#4caf50);
+border-radius:30px;
+padding:45px;
+color:white;
+box-shadow:0 20px 40px rgba(76,175,80,.25);
+}
+
+.big{
+font-size:120px;
+font-weight:700;
+line-height:1;
+}
+
+.sub{
+font-size:24px;
+margin-top:12px;
+}
+
+.progress{
+height:18px;
+background:rgba(255,255,255,.25);
+border-radius:20px;
+overflow:hidden;
+margin-top:28px;
+}
+
+.fill{
+height:100%;
+width:{{(days/90*100)|round}}%;
+background:white;
+}
+
+.day{
+margin-top:12px;
+font-size:18px;
+}
+
+.right{
+display:grid;
+gap:20px;
 }
 
 .card{
 background:white;
-border-radius:30px;
-padding:40px;
-box-shadow:0 20px 50px rgba(0,0,0,.08);
-}
-
-.title{
-font-size:64px;
-font-weight:700;
-color:#2468e8;
-margin-bottom:25px;
+padding:28px;
+border-radius:26px;
+box-shadow:0 12px 30px rgba(0,0,0,.06);
 }
 
 .tabs{
 display:grid;
 grid-template-columns:repeat(5,1fr);
-gap:18px;
-margin-bottom:35px;
+gap:12px;
 }
 
 .tab{
-padding:24px;
-border-radius:22px;
+padding:18px;
 text-align:center;
-font-size:22px;
+border-radius:18px;
+background:#edf7ef;
 font-weight:700;
-background:#eef3fa;
-box-shadow:inset 0 0 0 1px #dce6f7;
-transition:.25s;
-cursor:pointer;
+color:#2d5a3f;
 }
 
 .active{
-background:linear-gradient(135deg,#2468e8,#4da8ff);
+background:#4caf50;
 color:white;
-box-shadow:0 18px 35px rgba(36,104,232,.25);
-transform:translateY(-6px);
-}
-
-.panel{
-display:grid;
-grid-template-columns:350px 1fr;
-gap:35px;
-}
-
-.left{
-background:#f7fbff;
-border-radius:24px;
-padding:35px;
-text-align:center;
-}
-
-.big{
-font-size:140px;
-font-weight:700;
-color:#2468e8;
-line-height:1;
-}
-
-.eggs{
-font-size:30px;
-margin-top:15px;
-font-weight:600;
-}
-
-.right{
-background:#f7fbff;
-border-radius:24px;
-padding:35px;
 }
 
 .detail{
-font-size:24px;
+font-size:22px;
 line-height:2;
 }
 
 .label{
 font-weight:700;
-color:#2468e8;
+color:#4caf50;
 }
 
 .good{
-color:#15b86a;
+color:#1e9b53;
 font-weight:700;
 }
 
 .bad{
-color:#ff4d6d;
+color:#d9534f;
 font-weight:700;
 }
 
-.progress{
-height:20px;
-background:#dce8fa;
-border-radius:30px;
-margin-top:30px;
-overflow:hidden;
-}
-
-.fill{
-height:100%;
-width:{{ (days/90*100)|round }}%;
-background:linear-gradient(90deg,#2468e8,#4da8ff);
-}
-
 .footer{
-margin-top:25px;
-font-size:22px;
-color:#557;
+margin-top:18px;
+font-size:18px;
+color:#666;
+}
+
+@media(max-width:1000px){
+.main{
+grid-template-columns:1fr;
+}
+.tabs{
+grid-template-columns:1fr 1fr;
+}
+.big{
+font-size:90px;
+}
+.title{
+font-size:36px;
+}
 }
 </style>
 </head>
 <body>
 
-<a class="back" href="javascript:history.back()">← ย้อนกลับ</a>
-
 <div class="wrap">
 
-<div class="card">
+<div class="header">
+<div class="title">🐔 Smart Farm • คอก {{cage}}</div>
 
-<div class="title">{{cage}}</div>
-
-<div class="tabs">
-<div class="tab {% if stage=='1-2' %}active{% endif %}">สัปดาห์ 1-2</div>
-<div class="tab {% if stage=='3-4' %}active{% endif %}">สัปดาห์ 3-4</div>
-<div class="tab {% if stage=='5-8' %}active{% endif %}">สัปดาห์ 5-8</div>
-<div class="tab {% if stage=='9-12' %}active{% endif %}">สัปดาห์ 9-12</div>
-<div class="tab {% if stage=='kpi' %}active{% endif %}">KPI 90 วัน</div>
+<div class="actions">
+<a class="btn back" href="javascript:history.back()">← กลับ</a>
+<a class="btn update" href="/update/{{cage}}">อัปเดต</a>
+<a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
+</div>
 </div>
 
-<div class="panel">
+<div class="main">
 
 <div class="left">
 <div class="big">{{data.status.get('eggs','0')}}</div>
-<div class="eggs">🥚 ไข่สะสม</div>
+<div class="sub">ไข่สะสม</div>
+
+<div class="progress">
+<div class="fill"></div>
+</div>
+
+<div class="day">{{days}} / 90 วัน</div>
 </div>
 
 <div class="right">
 
-<div class="detail">
-<div><span class="label">💉 ฉีดผสม:</span> {{data.status.get('inject_count','-')}} ครั้ง</div>
-<div><span class="label">📅 วันที่เริ่ม:</span> {{data.status.get('inject_date','-')}}</div>
-<div><span class="label">🧪 เช็คเชื้อ:</span> {{data.status.get('check_result','-')}}</div>
-<div><span class="label">📝 หมายเหตุ:</span> {{data.status.get('note','-')}}</div>
+<div class="card tabs">
+<div class="tab {% if stage=='1-2' %}active{% endif %}">1-2</div>
+<div class="tab {% if stage=='3-4' %}active{% endif %}">3-4</div>
+<div class="tab {% if stage=='5-8' %}active{% endif %}">5-8</div>
+<div class="tab {% if stage=='9-12' %}active{% endif %}">9-12</div>
+<div class="tab {% if stage=='kpi' %}active{% endif %}">KPI</div>
+</div>
+
+<div class="card detail">
+
+<div><span class="label">ฉีดผสม:</span> {{data.status.get('inject_count','-')}} ครั้ง</div>
+
+<div><span class="label">วันที่เริ่ม:</span> {{data.status.get('inject_date','-')}}</div>
+
+<div><span class="label">เช็คเชื้อ:</span> {{data.status.get('check_result','-')}}</div>
+
+<div><span class="label">หมายเหตุ:</span> {{data.status.get('note','-')}}</div>
 
 <div>
-<span class="label">📊 สถานะ:</span>
+<span class="label">สถานะ:</span>
 {% if data.status.get('eggs',0)|int >= 6 %}
 <span class="good">ปกติ</span>
 {% else %}
 <span class="bad">ต่ำกว่าเกณฑ์</span>
 {% endif %}
-</div>
-
-<div><span class="label">⏱ ดำเนินมาแล้ว:</span> {{days}} วัน / 90 วัน</div>
-
-</div>
-
-<div class="progress">
-<div class="fill"></div>
 </div>
 
 <div class="footer">
