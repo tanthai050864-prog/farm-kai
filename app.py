@@ -1,4 +1,3 @@
-```python
 from flask import Flask, render_template, request, redirect
 from datetime import datetime, timedelta
 
@@ -216,4 +215,3 @@ def dashboard():
 
 if __name__=="__main__":
     app.run(debug=True)
-```
