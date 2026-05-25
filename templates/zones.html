@@ -28,7 +28,7 @@ color:white;
 
 .wrap{
 width:100%;
-max-width:1200px;
+max-width:1450px;
 }
 
 .back{
@@ -58,7 +58,7 @@ margin-bottom:55px;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
 gap:35px;
 }
 
@@ -106,8 +106,15 @@ margin-bottom:14px;
 
 .desc{
 font-size:18px;
-opacity:.8;
+opacity:.85;
 line-height:1.7;
+margin-bottom:18px;
+}
+
+.count{
+font-size:20px;
+font-weight:700;
+opacity:.95;
 }
 
 .f{
@@ -118,7 +125,12 @@ border-left:8px solid #2ecc71;
 border-left:8px solid #3498db;
 }
 
+.bh{
+border-left:8px solid #f39c12;
+}
+
 @media(max-width:700px){
+
 h1{
 font-size:38px;
 }
@@ -130,6 +142,11 @@ padding:35px;
 .name{
 font-size:30px;
 }
+
+.icon{
+font-size:60px;
+}
+
 }
 </style>
 </head>
@@ -148,16 +165,27 @@ font-size:30px;
 <div class="icon">🏠</div>
 <div class="name">โซน F</div>
 <div class="desc">
-พื้นที่ดูแลแม่พันธุ์และกระบวนการฝากผสม
+พื้นที่ดูแลแม่พันธุ์และฝากผสม
 </div>
+<div class="count">212 คอก</div>
 </a>
 
 <a class="btn k" href="/zone/K">
 <div class="icon">🔐</div>
 <div class="name">โซน K</div>
 <div class="desc">
-ติดตามสถานะการผสม เช็คเชื้อ KPI และผลผลิต
+ติดตามผลผสม เช็คเชื้อ KPI
 </div>
+<div class="count">292 คอก</div>
+</a>
+
+<a class="btn bh" href="/zone/BH">
+<div class="icon">🐣</div>
+<div class="name">โซน BH</div>
+<div class="desc">
+อนุบาลลูกไก่ ติดตามรุ่นและสุขภาพ
+</div>
+<div class="count">100 คอก</div>
 </a>
 
 </div>
