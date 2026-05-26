@@ -272,7 +272,74 @@ def finish(cage):
 
     return redirect("/zones")
 
+# =========================
+# FARM
+# =========================
+@app.route("/farm")
+def farm():
 
+    cages = Cage.query.filter(Cage.cage != None).all()
+
+    return render_template(
+        "farm.html",
+        cages=cages
+    )
+
+
+# =========================
+# DASHBOARD KPI
+# =========================
+@app.route("/dashboard")
+def dashboard():
+
+    cages = Cage.query.filter(Cage.cage != None).all()
+
+    total = len(cages)
+
+    active = len([c for c in cages if c.customer])
+
+    eggs = sum([c.eggs or 0 for c in cages])
+
+    return render_template(
+        "dashboard.html",
+        total=total,
+        active=active,
+        eggs=eggs
+    )
+
+
+# =========================
+# HISTORY ALL
+# =========================
+@app.route("/history_all")
+def history_all():
+    return render_template("history_all.html")
+
+
+@app.route("/history_in")
+def history_in():
+
+    customers = Cage.query.filter(
+        Cage.customer != None
+    ).all()
+
+    return render_template(
+        "history_in.html",
+        customers=customers
+    )
+
+
+@app.route("/history_out")
+def history_out():
+
+    done = Cage.query.filter(
+        Cage.finish_date != None
+    ).all()
+
+    return render_template(
+        "history_out.html",
+        done=done
+    )
 # =========================
 # RUN
 # =========================
