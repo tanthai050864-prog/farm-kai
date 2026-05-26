@@ -7,132 +7,98 @@
 <style>
 body{
 font-family:Segoe UI;
-background:#eef7ef;
-padding:35px;
+background:#0f1720;
+color:white;
+padding:30px;
 margin:0;
 }
 
 h1{
 text-align:center;
-font-size:50px;
-color:#183926;
-margin-bottom:35px;
+margin-bottom:30px;
 }
 
 .waiting{
-max-width:1300px;
-margin:auto;
+background:#1e293b;
+padding:20px;
+border-radius:20px;
+margin-bottom:35px;
+}
+
+.customer{
+padding:16px;
+background:#334155;
+margin-bottom:14px;
+border-radius:14px;
+}
+
+.grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
-gap:25px;
+grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+gap:12px;
 }
 
-.card{
-background:white;
-padding:28px;
-border-radius:24px;
-box-shadow:0 15px 35px rgba(0,0,0,.08);
-}
-
-.name{
-font-size:28px;
-font-weight:bold;
-color:#183926;
-margin-bottom:12px;
-}
-
-.info{
-line-height:1.8;
-color:#555;
-margin-bottom:20px;
-}
-
-select{
-width:100%;
-padding:18px;
+.cage{
+padding:16px;
 border-radius:16px;
-border:none;
-font-size:18px;
-margin-bottom:18px;
+text-align:center;
 font-weight:bold;
-}
-
-.f{
-background:#2ecc71;
+text-decoration:none;
 color:white;
+display:block;
 }
 
-.k{
-background:#3498db;
-color:white;
-}
+.F{background:#16a34a;}
+.K{background:#2563eb;}
+.BH{background:#9333ea;}
 
-.bh{
-background:#9b59b6;
-color:white;
-}
-
-button{
-width:100%;
-padding:18px;
-border:none;
-border-radius:16px;
-background:#183926;
-color:white;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-}
-
-button:hover{
-opacity:.9;
+.full{
+opacity:.35;
+pointer-events:none;
 }
 </style>
 </head>
 <body>
 
-<h1>🐔 จัดการไก่เข้าคอก</h1>
+<h1>📦 จัดการไก่เข้าคอก</h1>
 
 <div class="waiting">
 
-{% for item in waiting %}
-<div class="card">
+<h2>รอเข้าคอก</h2>
 
-<div class="name">{{item.customer}}</div>
+{% for c in waiting %}
+<div class="customer">
 
-<div class="info">
-แม่พันธุ์: {{item.mother}}<br>
-พ่อพันธุ์: {{item.father}}<br>
-โทร: {{item.phone}}
+<b>{{c.customer}}</b><br>
+แม่: {{c.mother}}<br>
+พ่อ: {{c.father}}
+
+<div class="grid" style="margin-top:15px;">
+
+{% for cage,data in cages.items() %}
+
+{% if data.customer %}
+<a class="cage
+{% if cage.startswith('F') %}F{% endif %}
+{% if cage.startswith('K') %}K{% endif %}
+{% if cage.startswith('BH') %}BH{% endif %}
+full">
+{{cage}}
+</a>
+
+{% else %}
+<a href="/assign/{{c.id}}/{{cage}}"
+class="cage
+{% if cage.startswith('F') %}F{% endif %}
+{% if cage.startswith('K') %}K{% endif %}
+{% if cage.startswith('BH') %}BH{% endif %}">
+{{cage}}
+</a>
+{% endif %}
+
+{% endfor %}
+
 </div>
-
-<form action="/assign/{{loop.index0}}" method="POST">
-
-<select name="cage" required>
-
-<optgroup label="🟩 โซน F">
-{% for c in cages if c.startswith('F') and not cages[c] %}
-<option class="f" value="{{c}}">{{c}}</option>
-{% endfor %}
-</optgroup>
-
-<optgroup label="🟦 โซน K">
-{% for c in cages if c.startswith('K') and not cages[c] %}
-<option class="k" value="{{c}}">{{c}}</option>
-{% endfor %}
-</optgroup>
-
-<optgroup label="🟪 โซน BH">
-{% for c in cages if c.startswith('BH') and not cages[c] %}
-<option class="bh" value="{{c}}">{{c}}</option>
-{% endfor %}
-</optgroup>
-
-</select>
-
-<button type="submit">เข้าคอก</button>
-
-</form>
 
 </div>
 {% endfor %}

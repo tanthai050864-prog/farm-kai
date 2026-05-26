@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import json
-import os
+import json, os
 
 app = Flask(__name__)
 app.secret_key = "FW100"
@@ -63,7 +62,6 @@ def create_cages():
 # =========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
-
     if request.method == "POST":
         if request.form["password"] == "FW100":
             session["logged"] = True
@@ -83,7 +81,6 @@ def logout():
 # =========================
 @app.route("/")
 def home():
-
     if not session.get("logged"):
         return redirect("/login")
 
@@ -95,7 +92,6 @@ def home():
 # =========================
 @app.route("/register", methods=["GET", "POST"])
 def register():
-
     if not session.get("logged"):
         return redirect("/login")
 
@@ -126,7 +122,6 @@ def register():
 def manage():
 
     waiting = Cage.query.filter_by(cage=None).all()
-
     cages = Cage.query.filter(Cage.cage != None).all()
 
     return render_template(
@@ -136,32 +131,32 @@ def manage():
     )
 
 
+# =========================
+# ASSIGN FIX
+# =========================
 @app.route("/assign/<int:i>", methods=["POST"])
 def assign(i):
 
-    waiting = Cage.query.filter_by(customer=None).all()
+    waiting = Cage.query.filter_by(cage=None).all()
 
-    used = Cage.query.filter(Cage.customer != None).all()
+    if i >= len(waiting):
+        return redirect("/manage")
 
-    selected = request.form["cage"]
-
+    selected = request.form.get("cage")
     target = Cage.query.filter_by(cage=selected).first()
 
-    empty = Cage.query.filter_by(customer=None).offset(i).first()
+    if not target:
+        return redirect("/manage")
 
-    if target and empty:
+    data = waiting[i]
 
-        target.customer = empty.customer
-        target.mother = empty.mother
-        target.father = empty.father
-        target.phone = empty.phone
+    target.customer = data.customer
+    target.mother = data.mother
+    target.father = data.father
+    target.phone = data.phone
 
-        empty.customer = None
-        empty.mother = None
-        empty.father = None
-        empty.phone = None
-
-        db.session.commit()
+    db.session.delete(data)
+    db.session.commit()
 
     return redirect("/manage")
 
@@ -276,22 +271,18 @@ def finish(cage):
 
     return redirect("/zones")
 
+
 # =========================
 # FARM
 # =========================
 @app.route("/farm")
 def farm():
-
     cages = Cage.query.filter(Cage.cage != None).all()
-
-    return render_template(
-        "farm.html",
-        cages=cages
-    )
+    return render_template("farm.html", cages=cages)
 
 
 # =========================
-# DASHBOARD KPI
+# DASHBOARD
 # =========================
 @app.route("/dashboard")
 def dashboard():
@@ -299,9 +290,7 @@ def dashboard():
     cages = Cage.query.filter(Cage.cage != None).all()
 
     total = len(cages)
-
     active = len([c for c in cages if c.customer])
-
     eggs = sum([c.eggs or 0 for c in cages])
 
     return render_template(
@@ -322,28 +311,16 @@ def history_all():
 
 @app.route("/history_in")
 def history_in():
-
-    customers = Cage.query.filter(
-        Cage.customer != None
-    ).all()
-
-    return render_template(
-        "history_in.html",
-        customers=customers
-    )
+    customers = Cage.query.filter(Cage.customer != None).all()
+    return render_template("history_in.html", customers=customers)
 
 
 @app.route("/history_out")
 def history_out():
+    done = Cage.query.filter(Cage.finish_date != None).all()
+    return render_template("history_out.html", done=done)
 
-    done = Cage.query.filter(
-        Cage.finish_date != None
-    ).all()
 
-    return render_template(
-        "history_out.html",
-        done=done
-    )
 # =========================
 # RUN
 # =========================
