@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import json
 import os
 
 app = Flask(__name__)
+app.secret_key = "FW100"
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(BASE_DIR, "farm.db")
@@ -15,9 +16,9 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-# ===============================
+# ======================
 # MODEL
-# ===============================
+# ======================
 class Cage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cage = db.Column(db.String(20), unique=True)
@@ -35,21 +36,20 @@ class Cage(db.Model):
     finish_date = db.Column(db.String(50))
 
 
-# ===============================
+# ======================
 # SAFE JSON
-# ===============================
-def safe_json(text, default):
+# ======================
+def safe_json(data, default):
     try:
-        return json.loads(text or json.dumps(default))
+        return json.loads(data or json.dumps(default))
     except:
         return default
 
 
-# ===============================
+# ======================
 # CREATE CAGES
-# ===============================
+# ======================
 def create_cages():
-
     names = []
 
     for i in range(1, 213):
@@ -68,19 +68,46 @@ def create_cages():
     db.session.commit()
 
 
-# ===============================
+# ======================
+# LOGIN
+# ======================
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+        if request.form["password"] == "FW100":
+            session["logged"] = True
+            return redirect("/")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
+
+# ======================
 # HOME
-# ===============================
+# ======================
 @app.route("/")
 def home():
+
+    if not session.get("logged"):
+        return redirect("/login")
+
     return render_template("index.html")
 
 
-# ===============================
+# ======================
 # REGISTER
-# ===============================
+# ======================
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     if request.method == "POST":
 
@@ -99,16 +126,23 @@ def register():
     return render_template("register.html")
 
 
-# ===============================
+# ======================
 # ZONES
-# ===============================
+# ======================
 @app.route("/zones")
 def zones():
+
+    if not session.get("logged"):
+        return redirect("/login")
+
     return render_template("zones.html")
 
 
 @app.route("/zone/<z>")
 def zone(z):
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     cages = Cage.query.filter(
         Cage.cage.startswith(z.upper())
@@ -121,45 +155,35 @@ def zone(z):
     )
 
 
-# ===============================
+# ======================
 # STATUS
-# ===============================
+# ======================
 @app.route("/status/<cage>")
 def status(cage):
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     data = Cage.query.filter_by(cage=cage).first()
 
     if not data:
         return redirect("/zones")
 
-    status_data = safe_json(data.status, {})
-    history_data = safe_json(data.history, [])
-
-    view = {
-        "customer": data.customer,
-        "mother": data.mother,
-        "father": data.father,
-        "phone": data.phone,
-        "eggs": data.eggs,
-        "finish_date": data.finish_date,
-        "status": status_data,
-        "history": history_data
-    }
-
     return render_template(
         "status.html",
         cage=cage,
-        data=view,
-        days=1,
-        stage="1-2"
+        data=data
     )
 
 
-# ===============================
+# ======================
 # UPDATE
-# ===============================
+# ======================
 @app.route("/update/<cage>", methods=["GET", "POST"])
 def update(cage):
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     data = Cage.query.filter_by(cage=cage).first()
 
@@ -193,11 +217,14 @@ def update(cage):
     )
 
 
-# ===============================
+# ======================
 # HISTORY
-# ===============================
+# ======================
 @app.route("/history/<cage>")
 def history(cage):
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     data = Cage.query.filter_by(cage=cage).first()
 
@@ -211,11 +238,14 @@ def history(cage):
     )
 
 
-# ===============================
+# ======================
 # FINISH
-# ===============================
+# ======================
 @app.route("/finish/<cage>")
 def finish(cage):
+
+    if not session.get("logged"):
+        return redirect("/login")
 
     data = Cage.query.filter_by(cage=cage).first()
 
@@ -226,16 +256,13 @@ def finish(cage):
     return redirect("/zones")
 
 
-# ===============================
-# RUN
-# ===============================
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-        create_cages()
+# ======================
+# START
+# ======================
+with app.app_context():
+    db.create_all()
+    create_cages()
 
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=True
-    )
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
