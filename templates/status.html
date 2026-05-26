@@ -15,29 +15,26 @@ font-family:'Prompt',sans-serif;
 }
 
 body{
-background:linear-gradient(135deg,#eef8f1,#dff0e3);
-padding:35px;
-color:#243d2e;
+background:#eef7ef;
+padding:40px;
+color:#234d30;
 }
 
 .wrap{
-max-width:1600px;
+max-width:1450px;
 margin:auto;
 }
 
-.header{
+.top{
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:25px;
-flex-wrap:wrap;
-gap:15px;
+margin-bottom:35px;
 }
 
 .title{
-font-size:50px;
+font-size:58px;
 font-weight:700;
-color:#2d5a3f;
 }
 
 .actions{
@@ -46,44 +43,67 @@ gap:14px;
 }
 
 .btn{
-padding:14px 24px;
+padding:16px 24px;
 border-radius:16px;
 text-decoration:none;
 font-weight:700;
+color:white;
 transition:.25s;
-}
-
-.back{
-background:white;
-color:#2d5a3f;
-}
-
-.update{
-background:#4caf50;
-color:white;
-}
-
-.finish{
-background:#8b5e3c;
-color:white;
 }
 
 .btn:hover{
 transform:translateY(-4px);
 }
 
-.main{
+.back{
+background:white;
+color:#234d30;
+}
+
+.history{
+background:#3498db;
+}
+
+.update{
+background:#4CAF50;
+}
+
+.finish{
+background:#8b5e3c;
+}
+
+.tabs{
 display:grid;
-grid-template-columns:360px 1fr;
-gap:28px;
+grid-template-columns:repeat(5,1fr);
+gap:16px;
+margin-bottom:30px;
+}
+
+.tab{
+padding:20px;
+border-radius:18px;
+background:#dce8dd;
+text-align:center;
+font-weight:700;
+}
+
+.active{
+background:#4CAF50;
+color:white;
+}
+
+.panel{
+display:grid;
+grid-template-columns:320px 1fr;
+gap:30px;
 }
 
 .left{
-background:linear-gradient(145deg,#2d5a3f,#4caf50);
-border-radius:30px;
-padding:45px;
+background:linear-gradient(135deg,#2f6f3b,#4CAF50);
 color:white;
-box-shadow:0 20px 40px rgba(76,175,80,.25);
+padding:35px;
+border-radius:28px;
+box-shadow:0 20px 40px rgba(0,0,0,.12);
 }
 
 .big{
@@ -92,101 +112,83 @@ font-weight:700;
 line-height:1;
 }
 
-.sub{
-font-size:24px;
+.eggs{
+font-size:30px;
 margin-top:12px;
 }
 
 .progress{
 height:18px;
 background:rgba(255,255,255,.25);
-border-radius:20px;
-overflow:hidden;
+border-radius:30px;
 margin-top:28px;
+overflow:hidden;
 }
 
 .fill{
 height:100%;
-width:{{(days/90*100)|round}}%;
+width:{{ (days/90*100)|round }}%;
 background:white;
 }
 
-.day{
-margin-top:12px;
-font-size:18px;
+.days{
+margin-top:14px;
+font-size:24px;
 }
 
 .right{
-display:grid;
-gap:20px;
-}
-
-.card{
 background:white;
-padding:28px;
-border-radius:26px;
-box-shadow:0 12px 30px rgba(0,0,0,.06);
-}
-
-.tabs{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:12px;
-}
-
-.tab{
-padding:18px;
-text-align:center;
-border-radius:18px;
-background:#edf7ef;
-font-weight:700;
-color:#2d5a3f;
-}
-
-.active{
-background:#4caf50;
-color:white;
+padding:35px;
+border-radius:28px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
 }
 
 .detail{
-font-size:22px;
+font-size:24px;
 line-height:2;
 }
 
 .label{
 font-weight:700;
-color:#4caf50;
+color:#4CAF50;
 }
 
 .good{
-color:#1e9b53;
+color:#28a745;
 font-weight:700;
 }
 
 .bad{
-color:#d9534f;
+color:#e74c3c;
 font-weight:700;
 }
 
 .footer{
-margin-top:18px;
-font-size:18px;
-color:#666;
+margin-top:25px;
+font-size:20px;
+opacity:.75;
 }
 
-@media(max-width:1000px){
-.main{
+@media(max-width:900px){
+
+.panel{
 grid-template-columns:1fr;
 }
-.tabs{
-grid-template-columns:1fr 1fr;
-}
-.big{
-font-size:90px;
-}
+
 .title{
 font-size:36px;
 }
+
+.top{
+flex-direction:column;
+gap:20px;
+}
+
+.actions{
+flex-wrap:wrap;
+justify-content:center;
+}
+
 }
 </style>
 </head>
@@ -194,32 +196,22 @@ font-size:36px;
 
 <div class="wrap">
 
-<div class="header">
-<div class="title">🐔 Smart Farm • คอก {{cage}}</div>
+<div class="top">
+
+<div class="title">
+🐔 Smart Farm • คอก {{cage}}
+</div>
 
 <div class="actions">
 <a class="btn back" href="javascript:history.back()">← กลับ</a>
+<a class="btn history" href="/history/{{cage}}">📜 ประวัติ</a>
 <a class="btn update" href="/update/{{cage}}">อัปเดต</a>
 <a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
 </div>
+
 </div>
 
-<div class="main">
-
-<div class="left">
-<div class="big">{{data.status.get('eggs','0')}}</div>
-<div class="sub">ไข่สะสม</div>
-
-<div class="progress">
-<div class="fill"></div>
-</div>
-
-<div class="day">{{days}} / 90 วัน</div>
-</div>
-
-<div class="right">
-
-<div class="card tabs">
+<div class="tabs">
 <div class="tab {% if stage=='1-2' %}active{% endif %}">1-2</div>
 <div class="tab {% if stage=='3-4' %}active{% endif %}">3-4</div>
 <div class="tab {% if stage=='5-8' %}active{% endif %}">5-8</div>
@@ -227,7 +219,22 @@ font-size:36px;
 <div class="tab {% if stage=='kpi' %}active{% endif %}">KPI</div>
 </div>
 
-<div class="card detail">
+<div class="panel">
+
+<div class="left">
+<div class="big">{{data.status.get('eggs','0')}}</div>
+<div class="eggs">ไข่สะสม</div>
+
+<div class="progress">
+<div class="fill"></div>
+</div>
+
+<div class="days">{{days}} / 90 วัน</div>
+</div>
+
+<div class="right">
+
+<div class="detail">
 
 <div><span class="label">ฉีดผสม:</span> {{data.status.get('inject_count','-')}} ครั้ง</div>
 
@@ -239,17 +246,19 @@ font-size:36px;
 
 <div>
 <span class="label">สถานะ:</span>
+
 {% if data.status.get('eggs',0)|int >= 6 %}
 <span class="good">ปกติ</span>
 {% else %}
 <span class="bad">ต่ำกว่าเกณฑ์</span>
 {% endif %}
+
+</div>
+
 </div>
 
 <div class="footer">
 อัปเดตล่าสุด : {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
-</div>
-
 </div>
 
 </div>

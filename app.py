@@ -1,148 +1,88 @@
 from flask import Flask, render_template, request, redirect
-from datetime import datetime, timedelta
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import json
 
 app = Flask(__name__)
 
-waiting = []
-customers = []
-finished = []
-chicks_born = 0
-cages = {}
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///farm.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# F
-for i in range(1, 213):
-    cages[f'F{i:03}'] = None
-
-# K
-for i in range(1, 293):
-    cages[f'K{i:03}'] = None
-
-# BH
-for i in range(1, 101):
-    cages[f'BH{i:03}'] = None
+db = SQLAlchemy(app)
 
 
-# ---------------------------
-# ALERT
-# ---------------------------
-def check_alert(status):
-
-    if not status:
-        return None
-
-    brooding = status.get("brooding")
-
-    if not brooding:
-        return None
-
-    try:
-        d, m, y = map(int, brooding.split("/"))
-
-        if y > 2500:
-            y -= 543
-
-        due = datetime(y, m, d) + timedelta(days=10)
-        diff = (due - datetime.now()).days
-
-        if diff <= 0:
-            return "ถึงกำหนด"
-
-        return f"อีก {diff} วัน"
-
-    except:
-        return None
+# -------------------
+# MODEL
+# -------------------
+class Cage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    cage = db.Column(db.String(20), unique=True)
+    customer = db.Column(db.String(100))
+    mother = db.Column(db.String(100))
+    father = db.Column(db.String(100))
+    phone = db.Column(db.String(50))
+    eggs = db.Column(db.Integer, default=0)
+    status = db.Column(db.Text, default="{}")
+    history = db.Column(db.Text, default="[]")
+    finish_date = db.Column(db.String(50))
 
 
-# ---------------------------
-# STAGE
-# ---------------------------
-def get_stage(data):
+# -------------------
+# CREATE CAGES
+# -------------------
+def create_cages():
+    all_cages = []
 
-    if not data:
-        return "1-2", 1
+    for i in range(1,213):
+        all_cages.append(f"F{i:03}")
 
-    inject = data.get("status", {}).get("inject_date")
+    for i in range(1,293):
+        all_cages.append(f"K{i:03}")
 
-    if not inject:
-        return "1-2", 1
+    for i in range(1,101):
+        all_cages.append(f"BH{i:03}")
 
-    try:
-        d, m, y = map(int, inject.split("/"))
+    for cage_name in all_cages:
+        if not Cage.query.filter_by(cage=cage_name).first():
+            db.session.add(Cage(cage=cage_name))
 
-        if y > 2500:
-            y -= 543
-
-        start = datetime(y, m, d)
-        days = (datetime.now() - start).days + 1
-
-        if days <= 14:
-            return "1-2", days
-        elif days <= 28:
-            return "3-4", days
-        elif days <= 56:
-            return "5-8", days
-        elif days <= 84:
-            return "9-12", days
-        else:
-            return "kpi", days
-
-    except:
-        return "1-2", 1
+    db.session.commit()
 
 
-# ---------------------------
+# -------------------
 # HOME
-# ---------------------------
+# -------------------
 @app.route('/')
 def home():
     return render_template("index.html")
 
 
-# ---------------------------
+# -------------------
 # REGISTER
-# ---------------------------
-@app.route('/register', methods=['GET', 'POST'])
+# -------------------
+@app.route('/register', methods=['GET','POST'])
 def register():
 
     if request.method == "POST":
-        data = request.form.to_dict()
-        waiting.append(data)
-        customers.append(data)
-        return redirect('/manage')
+
+        empty = Cage.query.filter_by(customer=None).first()
+
+        if empty:
+            empty.customer = request.form['customer']
+            empty.mother = request.form['mother']
+            empty.father = request.form['father']
+            empty.phone = request.form['phone']
+
+            db.session.commit()
+
+        return redirect('/zones')
 
     return render_template("register.html")
 
 
-# ---------------------------
-# MANAGE
-# ---------------------------
-@app.route('/manage')
-def manage():
-    return render_template("manage.html", waiting=waiting, cages=cages)
-
-
-# ---------------------------
-# ASSIGN
-# ---------------------------
-@app.route('/assign/<int:i>/<cage>')
-def assign(i, cage):
-
-    if cages.get(cage) is None and i < len(waiting):
-
-        cages[cage] = waiting.pop(i)
-
-        if not isinstance(cages[cage].get("status"), dict):
-            cages[cage]["status"] = {}
-
-        if not isinstance(cages[cage].get("history"), list):
-            cages[cage]["history"] = []
-
-    return redirect('/manage')
-
-
-# ---------------------------
+# -------------------
 # ZONES
-# ---------------------------
+# -------------------
 @app.route('/zones')
 def zones():
     return render_template("zones.html")
@@ -151,157 +91,106 @@ def zones():
 @app.route('/zone/<z>')
 def zone(z):
 
-    data = {
-        k: v for k, v in cages.items()
-        if k.startswith(z.upper())
-    }
-
-    for v in data.values():
-        if v:
-            v["alert"] = check_alert(v.get("status"))
+    cages = Cage.query.filter(
+        Cage.cage.startswith(z.upper())
+    ).all()
 
     return render_template(
         "cages.html",
-        groups={z: data},
+        cages=cages,
         title=z
     )
 
 
-# ---------------------------
+# -------------------
 # STATUS
-# ---------------------------
+# -------------------
 @app.route('/status/<cage>')
 def status(cage):
 
-    data = cages.get(cage)
+    data = Cage.query.filter_by(cage=cage).first()
 
     if not data:
         return redirect('/zones')
 
-    if not isinstance(data.get("status"), dict):
-        data["status"] = {}
-
-    if not isinstance(data.get("history"), list):
-        data["history"] = []
-
-    stage, days = get_stage(data)
-
     return render_template(
         "status.html",
         cage=cage,
-        data=data,
-        stage=stage,
-        days=days
+        data=data
     )
 
 
-# ---------------------------
+# -------------------
 # UPDATE
-# ---------------------------
-@app.route('/update/<cage>', methods=['GET', 'POST'])
+# -------------------
+@app.route('/update/<cage>', methods=['GET','POST'])
 def update(cage):
 
-    global chicks_born
-
-    if cages.get(cage) is None:
-        return redirect('/zones')
+    data = Cage.query.filter_by(cage=cage).first()
 
     if request.method == "POST":
 
-        status_data = request.form.to_dict()
-        status_data["updated_at"] = datetime.now().strftime("%d/%m/%Y %H:%M")
+        status = {
+            "eggs": request.form['eggs'],
+            "note": request.form['note'],
+            "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
+        }
 
-        if not isinstance(cages[cage].get("status"), dict):
-            cages[cage]["status"] = {}
+        data.eggs = int(request.form['eggs'])
+        data.status = json.dumps(status)
 
-        if not isinstance(cages[cage].get("history"), list):
-            cages[cage]["history"] = []
+        hist = json.loads(data.history)
+        hist.append(status)
 
-        cages[cage]["status"] = status_data
-        cages[cage]["history"].append(status_data)
+        data.history = json.dumps(hist)
 
-        try:
-            chicks_born += int(status_data.get("eggs", 0))
-        except:
-            pass
+        db.session.commit()
 
         return redirect(f'/status/{cage}')
 
     return render_template(
         "update.html",
         cage=cage,
-        data=cages[cage]
+        data=data
     )
 
 
-# ---------------------------
+# -------------------
 # HISTORY
-# ---------------------------
+# -------------------
 @app.route('/history/<cage>')
 def history(cage):
+
+    data = Cage.query.filter_by(cage=cage).first()
 
     return render_template(
         "history.html",
         cage=cage,
-        history=cages[cage]["history"]
+        history=json.loads(data.history)
     )
 
 
-# ---------------------------
+# -------------------
 # FINISH
-# ---------------------------
+# -------------------
 @app.route('/finish/<cage>')
 def finish(cage):
 
-    if cages.get(cage):
-        cages[cage]["finish_date"] = datetime.now().strftime("%d/%m/%Y")
-        finished.append(cages[cage])
-        cages[cage] = None
+    data = Cage.query.filter_by(cage=cage).first()
+
+    data.finish_date = datetime.now().strftime("%d/%m/%Y")
+
+    db.session.commit()
 
     return redirect('/zones')
 
 
-# ---------------------------
-# DASHBOARD
-# ---------------------------
-@app.route('/dashboard')
-def dashboard():
-
-    return render_template(
-        "dashboard.html",
-        customers=len(customers),
-        born=chicks_born
-    )
-
-
-@app.route('/history_all')
-def history_all():
-    return render_template("history_all.html")
-
-
-@app.route('/history_in')
-def history_in():
-    return render_template(
-        "history_in.html",
-        customers=customers
-    )
-
-
-@app.route('/history_out')
-def history_out():
-    return render_template(
-        "history_out.html",
-        done=finished
-    )
-
-
-@app.route('/farm')
-def farm():
-    return render_template("farm.html")
-
-
-# ---------------------------
+# -------------------
 # RUN
-# ---------------------------
+# -------------------
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        create_cages()
+
     app.run(debug=True)
