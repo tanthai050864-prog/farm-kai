@@ -47,9 +47,7 @@ gap:10px;
 flex-wrap:wrap;
 }
 
-/* =========================
-   FIX 1: BUTTON (iPad safe)
-========================= */
+/* BUTTON */
 .btn{
 padding:10px 16px;
 border-radius:12px;
@@ -65,7 +63,7 @@ background:#2f6f3b;
 cursor:pointer;
 }
 
-/* panels ต้องมี display grid (สำคัญ ไม่งั้น iPad เพี้ยน) */
+/* PANEL FIX (สำคัญ) */
 .panel{
 display:grid;
 grid-template-columns:1fr 2fr;
@@ -111,9 +109,7 @@ font-size:20px;
 opacity:.75;
 }
 
-/* =========================
-   FIX 2: iPad RESPONSIVE
-========================= */
+/* RESPONSIVE */
 @media(max-width:900px){
 
 body{
@@ -172,10 +168,10 @@ font-size:18px;
 </div>
 
 <div class="actions">
-<a class="btn back" href="/zones">กลับ</a>
-<a class="btn history" href="/history/{{cage}}">ประวัติ</a>
-<a class="btn update" href="/update/{{cage}}">อัปเดต</a>
-<a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
+<a class="btn" href="/zones">กลับ</a>
+<a class="btn" href="/history/{{cage}}">ประวัติ</a>
+<a class="btn" href="/update/{{cage}}">อัปเดต</a>
+<a class="btn" href="/finish/{{cage}}">จบงาน</a>
 </div>
 
 </div>
@@ -183,13 +179,23 @@ font-size:18px;
 <div class="panel">
 
 <div class="left">
-<div class="big">{{data.eggs}}</div>
+<div class="big">{{data.eggs or 0}}</div>
 <div class="eggs">ไข่สะสม</div>
 </div>
 
 <div class="right">
 
 <div class="detail">
+
+<div><span class="label">📅 วันที่ฉีด:</span> {{data.inject_date or "-"}}</div>
+<div><span class="label">💉 ครั้งที่ฉีด:</span> {{data.inject_round or "-"}}</div>
+<div><span class="label">🥚 จำนวนไข่:</span> {{data.eggs or 0}}</div>
+<div><span class="label">🐔 ไก่กก:</span> {{data.brood or "-"}}</div>
+<div><span class="label">🧪 ผลเช็คเชื้อ:</span> {{data.disease_result or "-"}}</div>
+<div><span class="label">🐣 เกิด:</span> {{data.birth or "-"}}</div>
+<div><span class="label">📝 หมายเหตุ:</span> {{data.note or "-"}}</div>
+
+<hr style="margin:15px 0;opacity:0.2;">
 
 <div><span class="label">ลูกค้า:</span> {{data.customer or "-"}}</div>
 <div><span class="label">แม่พันธุ์:</span> {{data.mother or "-"}}</div>

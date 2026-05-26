@@ -194,6 +194,8 @@ def status(cage):
     if not data:
         return redirect("/zones")
 
+    status_json = json.loads(data.status or "{}")
+
     return render_template(
         "status.html",
         cage=cage,
@@ -204,16 +206,14 @@ def status(cage):
             "phone": data.phone,
             "eggs": data.eggs,
             "finish_date": data.finish_date,
-            "status": json.loads(data.status or "{}")
+
+            # 🔥 รวมข้อมูลจาก JSON ตรงนี้
+            **status_json
         },
         days=1,
         stage="1-2"
     )
 
-
-# =========================
-# UPDATE
-# =========================
 @app.route("/update/<cage>", methods=["GET", "POST"])
 def update(cage):
 
@@ -221,18 +221,26 @@ def update(cage):
 
     if request.method == "POST":
 
-        status = {
-            "eggs": request.form.get("eggs", 0),
-            "note": request.form.get("note", ""),
-            "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
-        }
+        status = json.loads(data.status or "{}")
 
-        data.eggs = int(status["eggs"])
+        # 🔥 เก็บ field ใหม่ทั้งหมดลง JSON
+        status.update({
+            "inject_date": request.form.get("inject_date"),
+            "inject_round": request.form.get("inject_round"),
+            "brood": request.form.get("brood"),
+            "disease_result": request.form.get("disease_result"),
+            "birth": request.form.get("birth"),
+            "note": request.form.get("note"),
+            "eggs": int(request.form.get("eggs", 0)),
+            "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
+        })
+
+        data.eggs = status["eggs"]
         data.status = json.dumps(status)
 
+        # history
         history = json.loads(data.history or "[]")
         history.append(status)
-
         data.history = json.dumps(history)
 
         db.session.commit()
@@ -240,8 +248,6 @@ def update(cage):
         return redirect(f"/status/{cage}")
 
     return render_template("update.html", cage=cage, data=data)
-
-
 # =========================
 # HISTORY
 # =========================
