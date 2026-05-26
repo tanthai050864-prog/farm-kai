@@ -35,6 +35,10 @@ margin-bottom:35px;
 .title{
 font-size:58px;
 font-weight:700;
+color:white;
+background:#2f6f3b;
+padding:20px 35px;
+border-radius:22px;
 }
 
 .actions{
@@ -48,49 +52,12 @@ border-radius:16px;
 text-decoration:none;
 font-weight:700;
 color:white;
-transition:.25s;
 }
 
-.btn:hover{
-transform:translateY(-4px);
-}
-
-.back{
-background:white;
-color:#234d30;
-}
-
-.history{
-background:#3498db;
-}
-
-.update{
-background:#4CAF50;
-}
-
-.finish{
-background:#8b5e3c;
-}
-
-.tabs{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:16px;
-margin-bottom:30px;
-}
-
-.tab{
-padding:20px;
-border-radius:18px;
-background:#dce8dd;
-text-align:center;
-font-weight:700;
-}
-
-.active{
-background:#4CAF50;
-color:white;
-}
+.back{background:#555;}
+.history{background:#3498db;}
+.update{background:#4CAF50;}
+.finish{background:#8b5e3c;}
 
 .panel{
 display:grid;
@@ -103,44 +70,22 @@ background:linear-gradient(135deg,#2f6f3b,#4CAF50);
 color:white;
 padding:35px;
 border-radius:28px;
-box-shadow:0 20px 40px rgba(0,0,0,.12);
 }
 
 .big{
 font-size:120px;
 font-weight:700;
-line-height:1;
 }
 
 .eggs{
 font-size:30px;
-margin-top:12px;
-}
-
-.progress{
-height:18px;
-background:rgba(255,255,255,.25);
-border-radius:30px;
-margin-top:28px;
-overflow:hidden;
-}
-
-.fill{
-height:100%;
-width:{{ (days/90*100)|round }}%;
-background:white;
-}
-
-.days{
-margin-top:14px;
-font-size:24px;
 }
 
 .right{
 background:white;
 padding:35px;
 border-radius:28px;
-box-shadow:0 20px 40px rgba(0,0,0,.08);
+box-shadow:0 15px 40px rgba(0,0,0,.08);
 }
 
 .detail{
@@ -153,42 +98,10 @@ font-weight:700;
 color:#4CAF50;
 }
 
-.good{
-color:#28a745;
-font-weight:700;
-}
-
-.bad{
-color:#e74c3c;
-font-weight:700;
-}
-
 .footer{
 margin-top:25px;
 font-size:20px;
 opacity:.75;
-}
-
-@media(max-width:900px){
-
-.panel{
-grid-template-columns:1fr;
-}
-
-.title{
-font-size:36px;
-}
-
-.top{
-flex-direction:column;
-gap:20px;
-}
-
-.actions{
-flex-wrap:wrap;
-justify-content:center;
-}
-
 }
 </style>
 </head>
@@ -199,66 +112,43 @@ justify-content:center;
 <div class="top">
 
 <div class="title">
-🐔 Smart Farm • คอก {{cage}}
+🐔 Smart Farm • {{cage}}
 </div>
 
 <div class="actions">
-<a class="btn back" href="javascript:history.back()">← กลับ</a>
-<a class="btn history" href="/history/{{cage}}">📜 ประวัติ</a>
+<a class="btn back" href="/zones">กลับ</a>
+<a class="btn history" href="/history/{{cage}}">ประวัติ</a>
 <a class="btn update" href="/update/{{cage}}">อัปเดต</a>
 <a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
 </div>
 
 </div>
 
-<div class="tabs">
-<div class="tab {% if stage=='1-2' %}active{% endif %}">1-2</div>
-<div class="tab {% if stage=='3-4' %}active{% endif %}">3-4</div>
-<div class="tab {% if stage=='5-8' %}active{% endif %}">5-8</div>
-<div class="tab {% if stage=='9-12' %}active{% endif %}">9-12</div>
-<div class="tab {% if stage=='kpi' %}active{% endif %}">KPI</div>
-</div>
-
 <div class="panel">
 
 <div class="left">
-<div class="big">{{data.status.get('eggs','0')}}</div>
+<div class="big">{{data.eggs}}</div>
 <div class="eggs">ไข่สะสม</div>
-
-<div class="progress">
-<div class="fill"></div>
-</div>
-
-<div class="days">{{days}} / 90 วัน</div>
 </div>
 
 <div class="right">
 
 <div class="detail">
 
-<div><span class="label">ฉีดผสม:</span> {{data.status.get('inject_count','-')}} ครั้ง</div>
+<div><span class="label">ลูกค้า:</span> {{data.customer or "-"}}</div>
 
-<div><span class="label">วันที่เริ่ม:</span> {{data.status.get('inject_date','-')}}</div>
+<div><span class="label">แม่พันธุ์:</span> {{data.mother or "-"}}</div>
 
-<div><span class="label">เช็คเชื้อ:</span> {{data.status.get('check_result','-')}}</div>
+<div><span class="label">พ่อพันธุ์:</span> {{data.father or "-"}}</div>
 
-<div><span class="label">หมายเหตุ:</span> {{data.status.get('note','-')}}</div>
+<div><span class="label">โทร:</span> {{data.phone or "-"}}</div>
 
-<div>
-<span class="label">สถานะ:</span>
-
-{% if data.status.get('eggs',0)|int >= 6 %}
-<span class="good">ปกติ</span>
-{% else %}
-<span class="bad">ต่ำกว่าเกณฑ์</span>
-{% endif %}
-
-</div>
+<div><span class="label">ส่งออก:</span> {{data.finish_date or "ยังไม่จบงาน"}}</div>
 
 </div>
 
 <div class="footer">
-อัปเดตล่าสุด : {{data.status.get('updated_at','ยังไม่เคยอัปเดต')}}
+ระบบ Smart Farm พร้อมใช้งาน
 </div>
 
 </div>
