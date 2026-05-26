@@ -136,27 +136,31 @@ def manage():
     )
 
 
-# =========================
-# ASSIGN
-# =========================
-@app.route("/assign/<int:i>/<cage>")
-def assign(i, cage):
+@app.route("/assign/<int:i>", methods=["POST"])
+def assign(i):
 
-    waiting = Cage.query.filter_by(cage=None).all()
-    target = Cage.query.filter_by(cage=cage).first()
+    waiting = Cage.query.filter_by(customer=None).all()
 
-    if i < len(waiting) and target:
+    used = Cage.query.filter(Cage.customer != None).all()
 
-        data = waiting[i]
+    selected = request.form["cage"]
 
-        target.customer = data.customer
-        target.mother = data.mother
-        target.father = data.father
-        target.phone = data.phone
-        target.status = data.status
-        target.history = data.history
+    target = Cage.query.filter_by(cage=selected).first()
 
-        db.session.delete(data)
+    empty = Cage.query.filter_by(customer=None).offset(i).first()
+
+    if target and empty:
+
+        target.customer = empty.customer
+        target.mother = empty.mother
+        target.father = empty.father
+        target.phone = empty.phone
+
+        empty.customer = None
+        empty.mother = None
+        empty.father = None
+        empty.phone = None
+
         db.session.commit()
 
     return redirect("/manage")

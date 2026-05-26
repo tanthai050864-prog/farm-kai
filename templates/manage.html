@@ -5,181 +5,139 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Prompt',sans-serif;
-}
-
 body{
-background:linear-gradient(135deg,#eef8f1,#dff0e3);
+font-family:Segoe UI;
+background:#eef7ef;
 padding:35px;
-color:#243d2e;
+margin:0;
 }
 
-.wrap{
-max-width:1600px;
-margin:auto;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
+h1{
+text-align:center;
+font-size:50px;
+color:#183926;
 margin-bottom:35px;
-flex-wrap:wrap;
-gap:15px;
 }
 
-.title{
-font-size:46px;
-font-weight:700;
-color:#2d5a3f;
+.waiting{
+max-width:1300px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+gap:25px;
 }
 
-.back{
+.card{
 background:white;
-padding:14px 22px;
-border-radius:16px;
-text-decoration:none;
-color:#2d5a3f;
-font-weight:700;
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-transition:.25s;
-}
-
-.back:hover{
-transform:translateY(-4px);
-}
-
-.customer{
-background:white;
-border-radius:30px;
-padding:35px;
-margin-bottom:28px;
-box-shadow:0 20px 40px rgba(0,0,0,.06);
+padding:28px;
+border-radius:24px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
 }
 
 .name{
-font-size:30px;
-font-weight:700;
-color:#2d5a3f;
-margin-bottom:10px;
+font-size:28px;
+font-weight:bold;
+color:#183926;
+margin-bottom:12px;
 }
 
 .info{
-font-size:18px;
-color:#666;
+line-height:1.8;
+color:#555;
 margin-bottom:20px;
 }
 
-.section{
-font-size:20px;
-font-weight:700;
-margin-bottom:18px;
-color:#4caf50;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:14px;
-}
-
-.btn{
-display:block;
+select{
+width:100%;
 padding:18px;
-border-radius:18px;
-background:linear-gradient(145deg,#4caf50,#2d5a3f);
+border-radius:16px;
+border:none;
+font-size:18px;
+margin-bottom:18px;
+font-weight:bold;
+}
+
+.f{
+background:#2ecc71;
 color:white;
-text-decoration:none;
-font-weight:700;
-text-align:center;
-box-shadow:0 10px 20px rgba(76,175,80,.18);
-transition:.25s;
 }
 
-.btn:hover{
-transform:translateY(-5px);
+.k{
+background:#3498db;
+color:white;
 }
 
-.empty{
-text-align:center;
-font-size:28px;
-padding:80px;
-background:white;
-border-radius:30px;
-box-shadow:0 20px 40px rgba(0,0,0,.06);
-color:#2d5a3f;
+.bh{
+background:#9b59b6;
+color:white;
 }
 
-@media(max-width:900px){
-.title{
-font-size:34px;
+button{
+width:100%;
+padding:18px;
+border:none;
+border-radius:16px;
+background:#183926;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
 }
-.name{
-font-size:24px;
-}
-.grid{
-grid-template-columns:repeat(2,1fr);
-}
+
+button:hover{
+opacity:.9;
 }
 </style>
 </head>
 <body>
 
-<div class="wrap">
+<h1>🐔 จัดการไก่เข้าคอก</h1>
 
-<div class="top">
-<div class="title">📦 Smart Farm • จัดการไก่เข้าล็อค</div>
-<a class="back" href="/">← กลับ</a>
-</div>
-
-{% if waiting %}
+<div class="waiting">
 
 {% for item in waiting %}
-{% set item_index = loop.index0 %}
+<div class="card">
 
-<div class="customer">
-
-<div class="name">👤 {{item.customer}}</div>
+<div class="name">{{item.customer}}</div>
 
 <div class="info">
-🐔 {{item.mother}} × {{item.father}}
+แม่พันธุ์: {{item.mother}}<br>
+พ่อพันธุ์: {{item.father}}<br>
+โทร: {{item.phone}}
 </div>
 
-<div class="section">เลือกล็อคว่าง</div>
+<form action="/assign/{{loop.index0}}" method="POST">
 
-<div class="grid">
+<select name="cage" required>
 
-{% for cage,val in cages.items() %}
-{% if val is none %}
-
-<a class="btn" href="/assign/{{item_index}}/{{cage}}">
-{{cage}}
-</a>
-
-{% endif %}
+<optgroup label="🟩 โซน F">
+{% for c in cages if c.startswith('F') and not cages[c] %}
+<option class="f" value="{{c}}">{{c}}</option>
 {% endfor %}
+</optgroup>
 
-</div>
-
-</div>
-
+<optgroup label="🟦 โซน K">
+{% for c in cages if c.startswith('K') and not cages[c] %}
+<option class="k" value="{{c}}">{{c}}</option>
 {% endfor %}
+</optgroup>
 
-{% else %}
+<optgroup label="🟪 โซน BH">
+{% for c in cages if c.startswith('BH') and not cages[c] %}
+<option class="bh" value="{{c}}">{{c}}</option>
+{% endfor %}
+</optgroup>
 
-<div class="empty">
-✅ ไม่มีรายการรอเข้าล็อค
+</select>
+
+<button type="submit">เข้าคอก</button>
+
+</form>
+
 </div>
-
-{% endif %}
+{% endfor %}
 
 </div>
 
 </body>
-</html> 
+</html>
