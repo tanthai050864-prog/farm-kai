@@ -9,8 +9,14 @@ body{
 font-family:Segoe UI;
 background:linear-gradient(135deg,#08130d,#183926);
 padding:30px;
-color:white;
 margin:0;
+color:white;
+}
+
+h1{
+text-align:center;
+font-size:56px;
+margin-bottom:40px;
 }
 
 .back{
@@ -19,85 +25,109 @@ top:20px;
 left:20px;
 background:white;
 color:#183926;
-padding:12px 18px;
+padding:14px 20px;
 border-radius:14px;
 text-decoration:none;
 font-weight:bold;
 }
 
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+max-width:1700px;
+margin:auto;
+}
+
 .card{
-max-width:1100px;
-margin:90px auto;
 background:rgba(255,255,255,.08);
 backdrop-filter:blur(18px);
-padding:50px;
 border-radius:28px;
-box-shadow:0 20px 40px rgba(0,0,0,.3);
+padding:28px;
+box-shadow:0 15px 35px rgba(0,0,0,.25);
 }
 
-h1{
-font-size:54px;
-margin-bottom:30px;
-color:white;
-}
-
-.big{
-font-size:100px;
+.name{
+font-size:52px;
 font-weight:700;
+color:white;
+margin-bottom:20px;
+}
+
+.status{
+font-size:22px;
+margin-bottom:18px;
+}
+
+.empty{
 color:#7CFF9F;
 }
 
+.busy{
+color:#ff7272;
+}
+
 .info{
-font-size:22px;
-line-height:2;
-margin-top:25px;
+font-size:18px;
+line-height:1.8;
+margin-bottom:20px;
 }
 
 .btns{
-margin-top:40px;
 display:flex;
-gap:20px;
+gap:14px;
 flex-wrap:wrap;
 }
 
 .btn{
-padding:18px 30px;
-border-radius:18px;
+padding:14px 20px;
+border-radius:14px;
 text-decoration:none;
 font-weight:bold;
-font-size:18px;
 color:white;
 }
 
-.update{background:#3498db;}
-.history{background:#9b59b6;}
-.finish{background:#e74c3c;}
+.view{background:#3498db;}
+.update{background:#4CAF50;}
+.finish{background:#8b5e3c;}
 </style>
 </head>
-
 <body>
 
 <a class="back" href="/zones">⬅ กลับ</a>
 
+<h1>{{title}}</h1>
+
+<div class="grid">
+
+{% for cage in cages %}
+
 <div class="card">
 
-<h1>{{ cage }}</h1>
+<div class="name">{{cage.cage}}</div>
 
-<div class="big">{{ data.eggs }}</div>
+{% if cage.customer %}
+<div class="status busy">● มีข้อมูล</div>
 
 <div class="info">
-👤 ลูกค้า: {{ data.customer or "-" }}<br>
-🐔 แม่พันธุ์: {{ data.mother or "-" }}<br>
-🦅 พ่อพันธุ์: {{ data.father or "-" }}<br>
-📞 โทร: {{ data.phone or "-" }}<br>
-📅 ส่งออก: {{ data.finish_date or "ยังไม่จบงาน" }}
+👤 {{cage.customer}}<br>
+🐔 {{cage.mother}}<br>
+🦅 {{cage.father}}
 </div>
 
 <div class="btns">
-<a class="btn update" href="/update/{{cage}}">อัปเดต</a>
-<a class="btn history" href="/history/{{cage}}">ประวัติ</a>
-<a class="btn finish" href="/finish/{{cage}}">จบงาน</a>
+<a class="btn view" href="/status/{{cage.cage}}">สถานะ</a>
+<a class="btn update" href="/update/{{cage.cage}}">อัปเดต</a>
+<a class="btn finish" href="/finish/{{cage.cage}}">จบงาน</a>
 </div>
+
+{% else %}
+<div class="status empty">● ล็อคว่าง</div>
+{% endif %}
+
+</div>
+
+{% endfor %}
 
 </div>
 
