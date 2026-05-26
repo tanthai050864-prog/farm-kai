@@ -5,7 +5,7 @@ import json
 import os
 
 app = Flask(__name__)
-app.secret_key = "smartfarm"
+app.secret_key = "FW100"
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 db_path = os.path.join(BASE_DIR, "farm.db")
@@ -16,12 +16,12 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
-# ==========================
+# =========================
 # MODEL
-# ==========================
+# =========================
 class Cage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cage = db.Column(db.String(20), unique=True)
+    cage = db.Column(db.String(20), unique=True, nullable=True)
 
     customer = db.Column(db.String(100))
     mother = db.Column(db.String(100))
@@ -36,9 +36,9 @@ class Cage(db.Model):
     finish_date = db.Column(db.String(50))
 
 
-# ==========================
+# =========================
 # CREATE CAGES
-# ==========================
+# =========================
 def create_cages():
     names = []
 
@@ -58,9 +58,9 @@ def create_cages():
     db.session.commit()
 
 
-# ==========================
+# =========================
 # LOGIN
-# ==========================
+# =========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
 
@@ -78,9 +78,9 @@ def logout():
     return redirect("/login")
 
 
-# ==========================
+# =========================
 # HOME
-# ==========================
+# =========================
 @app.route("/")
 def home():
 
@@ -90,9 +90,9 @@ def home():
     return render_template("index.html")
 
 
-# ==========================
+# =========================
 # REGISTER
-# ==========================
+# =========================
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -101,14 +101,17 @@ def register():
 
     if request.method == "POST":
 
-        cage = Cage(
+        waiting = Cage(
+            cage=None,
             customer=request.form["customer"],
             mother=request.form["mother"],
             father=request.form["father"],
-            phone=request.form["phone"]
+            phone=request.form["phone"],
+            status="{}",
+            history="[]"
         )
 
-        db.session.add(cage)
+        db.session.add(waiting)
         db.session.commit()
 
         return redirect("/manage")
@@ -116,51 +119,54 @@ def register():
     return render_template("register.html")
 
 
-# ==========================
+# =========================
 # MANAGE
-# ==========================
+# =========================
 @app.route("/manage")
 def manage():
 
-    if not session.get("logged"):
-        return redirect("/login")
+    waiting = Cage.query.filter_by(cage=None).all()
 
-    waiting = Cage.query.filter(Cage.cage == None).all()
     cages = Cage.query.filter(Cage.cage != None).all()
-
-    cage_map = {c.cage: c.customer for c in cages}
 
     return render_template(
         "manage.html",
         waiting=waiting,
-        cages=cage_map
+        cages={c.cage: c for c in cages}
     )
 
 
-# ==========================
+# =========================
 # ASSIGN
-# ==========================
+# =========================
 @app.route("/assign/<int:i>/<cage>")
 def assign(i, cage):
 
-    waiting = Cage.query.filter(Cage.cage == None).all()
+    waiting = Cage.query.filter_by(cage=None).all()
+    target = Cage.query.filter_by(cage=cage).first()
 
-    if i < len(waiting):
-        waiting[i].cage = cage
+    if i < len(waiting) and target:
+
+        data = waiting[i]
+
+        target.customer = data.customer
+        target.mother = data.mother
+        target.father = data.father
+        target.phone = data.phone
+        target.status = data.status
+        target.history = data.history
+
+        db.session.delete(data)
         db.session.commit()
 
     return redirect("/manage")
 
 
-# ==========================
+# =========================
 # ZONES
-# ==========================
+# =========================
 @app.route("/zones")
 def zones():
-
-    if not session.get("logged"):
-        return redirect("/login")
-
     return render_template("zones.html")
 
 
@@ -178,9 +184,9 @@ def zone(z):
     )
 
 
-# ==========================
+# =========================
 # STATUS
-# ==========================
+# =========================
 @app.route("/status/<cage>")
 def status(cage):
 
@@ -188,8 +194,6 @@ def status(cage):
 
     if not data:
         return redirect("/zones")
-
-    status_data = json.loads(data.status or "{}")
 
     return render_template(
         "status.html",
@@ -201,16 +205,16 @@ def status(cage):
             "phone": data.phone,
             "eggs": data.eggs,
             "finish_date": data.finish_date,
-            "status": status_data
+            "status": json.loads(data.status or "{}")
         },
         days=1,
         stage="1-2"
     )
 
 
-# ==========================
+# =========================
 # UPDATE
-# ==========================
+# =========================
 @app.route("/update/<cage>", methods=["GET", "POST"])
 def update(cage):
 
@@ -236,16 +240,12 @@ def update(cage):
 
         return redirect(f"/status/{cage}")
 
-    return render_template(
-        "update.html",
-        cage=cage,
-        data=data
-    )
+    return render_template("update.html", cage=cage, data=data)
 
 
-# ==========================
+# =========================
 # HISTORY
-# ==========================
+# =========================
 @app.route("/history/<cage>")
 def history(cage):
 
@@ -258,9 +258,9 @@ def history(cage):
     )
 
 
-# ==========================
+# =========================
 # FINISH
-# ==========================
+# =========================
 @app.route("/finish/<cage>")
 def finish(cage):
 
@@ -273,9 +273,9 @@ def finish(cage):
     return redirect("/zones")
 
 
-# ==========================
+# =========================
 # RUN
-# ==========================
+# =========================
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
