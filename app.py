@@ -36,9 +36,20 @@ class Cage(db.Model):
 
 
 # ===============================
+# SAFE JSON
+# ===============================
+def safe_json(text, default):
+    try:
+        return json.loads(text or json.dumps(default))
+    except:
+        return default
+
+
+# ===============================
 # CREATE CAGES
 # ===============================
 def create_cages():
+
     names = []
 
     for i in range(1, 213):
@@ -121,20 +132,24 @@ def status(cage):
     if not data:
         return redirect("/zones")
 
-    status_data = json.loads(data.status or "{}")
-    history_data = json.loads(data.history or "[]")
+    status_data = safe_json(data.status, {})
+    history_data = safe_json(data.history, [])
+
+    view = {
+        "customer": data.customer,
+        "mother": data.mother,
+        "father": data.father,
+        "phone": data.phone,
+        "eggs": data.eggs,
+        "finish_date": data.finish_date,
+        "status": status_data,
+        "history": history_data
+    }
 
     return render_template(
         "status.html",
         cage=cage,
-        data={
-            "customer": data.customer,
-            "mother": data.mother,
-            "father": data.father,
-            "eggs": data.eggs,
-            "status": status_data,
-            "history": history_data
-        },
+        data=view,
         days=1,
         stage="1-2"
     )
@@ -162,7 +177,7 @@ def update(cage):
         data.eggs = int(status["eggs"])
         data.status = json.dumps(status)
 
-        history = json.loads(data.history or "[]")
+        history = safe_json(data.history, [])
         history.append(status)
 
         data.history = json.dumps(history)
@@ -192,7 +207,7 @@ def history(cage):
     return render_template(
         "history.html",
         cage=cage,
-        history=json.loads(data.history or "[]")
+        history=safe_json(data.history, [])
     )
 
 
@@ -219,4 +234,8 @@ if __name__ == "__main__":
         db.create_all()
         create_cages()
 
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )ห
