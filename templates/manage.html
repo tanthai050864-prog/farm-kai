@@ -7,98 +7,97 @@
 <style>
 body{
 font-family:Segoe UI;
-background:#0f1720;
-color:white;
+background:#0d1f14;
 padding:30px;
+color:white;
 margin:0;
 }
 
 h1{
 text-align:center;
+font-size:42px;
 margin-bottom:30px;
 }
 
-.waiting{
-background:#1e293b;
-padding:20px;
-border-radius:20px;
-margin-bottom:35px;
+.box{
+max-width:1200px;
+margin:auto;
 }
 
-.customer{
-padding:16px;
-background:#334155;
-margin-bottom:14px;
+.card{
+background:rgba(255,255,255,.06);
+padding:25px;
+border-radius:22px;
+margin-bottom:25px;
+}
+
+.wait{
+background:#2e7d32;
+}
+
+select,button{
+padding:14px;
+border:none;
 border-radius:14px;
+font-size:16px;
+margin-top:12px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
-gap:12px;
+select{
+width:70%;
 }
 
-.cage{
-padding:16px;
-border-radius:16px;
-text-align:center;
-font-weight:bold;
-text-decoration:none;
+button{
+background:#4CAF50;
 color:white;
-display:block;
+font-weight:bold;
+cursor:pointer;
+width:25%;
 }
 
-.F{background:#16a34a;}
-.K{background:#2563eb;}
-.BH{background:#9333ea;}
-
-.full{
-opacity:.35;
-pointer-events:none;
+.row{
+margin-bottom:18px;
+padding:18px;
+background:rgba(255,255,255,.08);
+border-radius:16px;
 }
 </style>
 </head>
 <body>
 
-<h1>📦 จัดการไก่เข้าคอก</h1>
+<div class="box">
 
-<div class="waiting">
+<h1>🐔 จัดการไก่เข้าคอก</h1>
 
-<h2>รอเข้าคอก</h2>
+{% for w in waiting %}
+<div class="card wait">
 
-{% for c in waiting %}
-<div class="customer">
+<div class="row">
+👤 {{w.customer}} <br>
+🐔 {{w.mother}} × {{w.father}}
+</div>
 
-<b>{{c.customer}}</b><br>
-แม่: {{c.mother}}<br>
-พ่อ: {{c.father}}
+<form method="POST" action="/assign/{{loop.index0}}">
 
-<div class="grid" style="margin-top:15px;">
+<select name="cage" required>
 
 {% for cage,data in cages.items() %}
+{% if not data.customer %}
 
-{% if data.customer %}
-<a class="cage
-{% if cage.startswith('F') %}F{% endif %}
-{% if cage.startswith('K') %}K{% endif %}
-{% if cage.startswith('BH') %}BH{% endif %}
-full">
+<option value="{{cage}}">
 {{cage}}
-</a>
+</option>
 
-{% else %}
-<a href="/assign/{{c.id}}/{{cage}}"
-class="cage
-{% if cage.startswith('F') %}F{% endif %}
-{% if cage.startswith('K') %}K{% endif %}
-{% if cage.startswith('BH') %}BH{% endif %}">
-{{cage}}
-</a>
 {% endif %}
-
 {% endfor %}
 
-</div>
+</select>
+
+<button type="submit">
+เข้าคอก
+</button>
+
+</form>
 
 </div>
 {% endfor %}
