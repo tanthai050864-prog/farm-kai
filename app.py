@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import json, os
+import json
+import os
 
 app = Flask(__name__)
 app.secret_key = "FW100"
@@ -20,6 +21,7 @@ db = SQLAlchemy(app)
 # =========================
 class Cage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+
     cage = db.Column(db.String(20), unique=True, nullable=True)
 
     customer = db.Column(db.String(100))
@@ -39,6 +41,7 @@ class Cage(db.Model):
 # CREATE CAGES
 # =========================
 def create_cages():
+
     names = []
 
     for i in range(1, 213):
@@ -51,6 +54,7 @@ def create_cages():
         names.append(f"BH{i:03}")
 
     for name in names:
+
         if not Cage.query.filter_by(cage=name).first():
             db.session.add(Cage(cage=name))
 
@@ -62,7 +66,9 @@ def create_cages():
 # =========================
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
+
         if request.form["password"] == "FW100":
             session["logged"] = True
             return redirect("/")
@@ -72,7 +78,9 @@ def login():
 
 @app.route("/logout")
 def logout():
+
     session.clear()
+
     return redirect("/login")
 
 
@@ -81,6 +89,7 @@ def logout():
 # =========================
 @app.route("/")
 def home():
+
     if not session.get("logged"):
         return redirect("/login")
 
@@ -92,6 +101,7 @@ def home():
 # =========================
 @app.route("/register", methods=["GET", "POST"])
 def register():
+
     if not session.get("logged"):
         return redirect("/login")
 
@@ -122,7 +132,10 @@ def register():
 def manage():
 
     waiting = Cage.query.filter_by(cage=None).all()
-    cages = Cage.query.filter(Cage.cage != None).all()
+
+    cages = Cage.query.filter(
+        Cage.cage != None
+    ).all()
 
     return render_template(
         "manage.html",
@@ -132,7 +145,7 @@ def manage():
 
 
 # =========================
-# ASSIGN FIX
+# ASSIGN
 # =========================
 @app.route("/assign/<int:i>", methods=["POST"])
 def assign(i):
@@ -143,7 +156,10 @@ def assign(i):
         return redirect("/manage")
 
     selected = request.form.get("cage")
-    target = Cage.query.filter_by(cage=selected).first()
+
+    target = Cage.query.filter_by(
+        cage=selected
+    ).first()
 
     if not target:
         return redirect("/manage")
@@ -156,6 +172,7 @@ def assign(i):
     target.phone = data.phone
 
     db.session.delete(data)
+
     db.session.commit()
 
     return redirect("/manage")
@@ -166,6 +183,7 @@ def assign(i):
 # =========================
 @app.route("/zones")
 def zones():
+
     return render_template("zones.html")
 
 
@@ -189,12 +207,16 @@ def zone(z):
 @app.route("/status/<cage>")
 def status(cage):
 
-    data = Cage.query.filter_by(cage=cage).first()
+    data = Cage.query.filter_by(
+        cage=cage
+    ).first()
 
     if not data:
         return redirect("/zones")
 
-    status_json = json.loads(data.status or "{}")
+    status_json = json.loads(
+        data.status or "{}"
+    )
 
     return render_template(
         "status.html",
@@ -206,11 +228,12 @@ def status(cage):
             "phone": data.phone,
             "eggs": data.eggs,
             "finish_date": data.finish_date,
-            **status_json
+            "status": status_json
         },
         days=1,
         stage="1-2"
     )
+
 
 # =========================
 # UPDATE
@@ -218,14 +241,18 @@ def status(cage):
 @app.route("/update/<cage>", methods=["GET", "POST"])
 def update(cage):
 
-    data = Cage.query.filter_by(cage=cage).first()
+    data = Cage.query.filter_by(
+        cage=cage
+    ).first()
 
     if not data:
         return redirect("/zones")
 
     if request.method == "POST":
 
-        status = json.loads(data.status or "{}")
+        status = json.loads(
+            data.status or "{}"
+        )
 
         status.update({
             "inject_date": request.form.get("inject_date", ""),
@@ -239,9 +266,13 @@ def update(cage):
         })
 
         data.eggs = status["eggs"]
+
         data.status = json.dumps(status)
 
-        history = json.loads(data.history or "[]")
+        history = json.loads(
+            data.history or "[]"
+        )
+
         history.append(status)
 
         data.history = json.dumps(history)
@@ -254,18 +285,25 @@ def update(cage):
         "update.html",
         cage=cage,
         data=data
-    )=======================
+    )
+
+
+# =========================
 # HISTORY
 # =========================
 @app.route("/history/<cage>")
 def history(cage):
 
-    data = Cage.query.filter_by(cage=cage).first()
+    data = Cage.query.filter_by(
+        cage=cage
+    ).first()
 
     return render_template(
         "history.html",
         cage=cage,
-        history=json.loads(data.history or "[]")
+        history=json.loads(
+            data.history or "[]"
+        )
     )
 
 
@@ -275,10 +313,14 @@ def history(cage):
 @app.route("/finish/<cage>")
 def finish(cage):
 
-    data = Cage.query.filter_by(cage=cage).first()
+    data = Cage.query.filter_by(
+        cage=cage
+    ).first()
 
     if data:
+
         data.finish_date = datetime.now().strftime("%d/%m/%Y")
+
         db.session.commit()
 
     return redirect("/zones")
@@ -289,8 +331,15 @@ def finish(cage):
 # =========================
 @app.route("/farm")
 def farm():
-    cages = Cage.query.filter(Cage.cage != None).all()
-    return render_template("farm.html", cages=cages)
+
+    cages = Cage.query.filter(
+        Cage.cage != None
+    ).all()
+
+    return render_template(
+        "farm.html",
+        cages=cages
+    )
 
 
 # =========================
@@ -312,9 +361,13 @@ def dashboard():
 
     for c in finished:
 
-        status = json.loads(c.status or "{}")
+        status = json.loads(
+            c.status or "{}"
+        )
 
-        chicks = int(status.get("birth", 0) or 0)
+        chicks = int(
+            status.get("birth", 0) or 0
+        )
 
         born += chicks
 
@@ -350,13 +403,17 @@ def dashboard_group(group):
         Cage.finish_date != None
     ).all()
 
-    cages = []
+    result = []
 
     for c in finished:
 
-        status = json.loads(c.status or "{}")
+        status = json.loads(
+            c.status or "{}"
+        )
 
-        chicks = int(status.get("birth", 0) or 0)
+        chicks = int(
+            status.get("birth", 0) or 0
+        )
 
         show = False
 
@@ -373,43 +430,64 @@ def dashboard_group(group):
             show = True
 
         if show:
-            cages.append({
-                "cage": c.cage,
-                "customer": c.customer,
-                "birth": chicks
-            })
+            result.append(c)
 
     return render_template(
-        "dashboard_group.html",
-        cages=cages
+        "farm.html",
+        cages=result
     )
+
 
 # =========================
 # HISTORY ALL
 # =========================
 @app.route("/history_all")
 def history_all():
-    return render_template("history_all.html")
+
+    return render_template(
+        "history_all.html"
+    )
 
 
 @app.route("/history_in")
 def history_in():
-    customers = Cage.query.filter(Cage.customer != None).all()
-    return render_template("history_in.html", customers=customers)
+
+    customers = Cage.query.filter(
+        Cage.customer != None
+    ).all()
+
+    return render_template(
+        "history_in.html",
+        customers=customers
+    )
 
 
 @app.route("/history_out")
 def history_out():
-    done = Cage.query.filter(Cage.finish_date != None).all()
-    return render_template("history_out.html", done=done)
+
+    done = Cage.query.filter(
+        Cage.finish_date != None
+    ).all()
+
+    return render_template(
+        "history_out.html",
+        done=done
+    )
 
 
 # =========================
 # RUN
 # =========================
 if __name__ == "__main__":
+
     with app.app_context():
+
         db.create_all()
+
         create_cages()
 
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=5000,
+        debug=True
+    )
