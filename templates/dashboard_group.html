@@ -8,8 +8,13 @@
 body{
 font-family:Segoe UI;
 background:#eef7ef;
-padding:40px;
+padding:30px;
 margin:0;
+}
+
+.wrap{
+max-width:1200px;
+margin:auto;
 }
 
 .top{
@@ -20,14 +25,14 @@ margin-bottom:30px;
 }
 
 .title{
-font-size:42px;
+font-size:40px;
 font-weight:bold;
 color:#234d30;
 }
 
 .back{
 background:white;
-padding:14px 20px;
+padding:12px 20px;
 border-radius:14px;
 text-decoration:none;
 font-weight:bold;
@@ -36,33 +41,35 @@ color:#234d30;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:25px;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
 }
 
 .card{
 background:white;
-padding:30px;
+padding:25px;
 border-radius:24px;
+box-shadow:0 10px 25px rgba(0,0,0,.08);
 text-decoration:none;
 color:#234d30;
-box-shadow:0 15px 35px rgba(0,0,0,.08);
 }
 
-.name{
-font-size:40px;
+.cage{
+font-size:38px;
 font-weight:bold;
-margin-bottom:15px;
-color:#2f6f3b;
+color:#4CAF50;
 }
 
 .info{
+margin-top:15px;
 font-size:20px;
-line-height:1.9;
+line-height:1.8;
 }
 </style>
 </head>
 <body>
+
+<div class="wrap">
 
 <div class="top">
 <div class="title">📊 รายการคอก</div>
@@ -75,16 +82,18 @@ line-height:1.9;
 
 <a class="card" href="/status/{{c.cage}}">
 
-<div class="name">{{c.cage}}</div>
+<div class="cage">{{c.cage}}</div>
 
 <div class="info">
 👤 {{c.customer or "-"}}<br>
-🥚 ได้ลูก: {{c.eggs or 0}} ตัว
+🐣 {{c.birth}} ตัว
 </div>
 
 </a>
 
 {% endfor %}
+
+</div>
 
 </div>
 

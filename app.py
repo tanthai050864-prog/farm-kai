@@ -206,8 +206,6 @@ def status(cage):
             "phone": data.phone,
             "eggs": data.eggs,
             "finish_date": data.finish_date,
-
-            # 🔥 รวมข้อมูลจาก JSON ตรงนี้
             **status_json
         },
         days=1,
@@ -221,31 +219,29 @@ def update(cage):
 
     if request.method == "POST":
 
-        status = json.loads(data.status or "{}")
+    status = json.loads(data.status or "{}")
 
-        # 🔥 เก็บ field ใหม่ทั้งหมดลง JSON
-        status.update({
-            "inject_date": request.form.get("inject_date"),
-            "inject_round": request.form.get("inject_round"),
-            "brood": request.form.get("brood"),
-            "disease_result": request.form.get("disease_result"),
-            "birth": request.form.get("birth"),
-            "note": request.form.get("note"),
-            "eggs": int(request.form.get("eggs", 0)),
-            "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
-        })
+    status.update({
+        "inject_date": request.form.get("inject_date", ""),
+        "inject_round": request.form.get("inject_round", ""),   # ครั้งที่ฉีด
+        "brood": request.form.get("brood", ""),
+        "disease_result": request.form.get("disease_result", ""),
+        "birth": request.form.get("birth", ""),
+        "note": request.form.get("note", ""),
+        "eggs": int(request.form.get("eggs", 0)),
+        "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
+    })
 
-        data.eggs = status["eggs"]
-        data.status = json.dumps(status)
+    data.eggs = status["eggs"]
+    data.status = json.dumps(status)
 
-        # history
-        history = json.loads(data.history or "[]")
-        history.append(status)
-        data.history = json.dumps(history)
+    history = json.loads(data.history or "[]")
+    history.append(status)
+    data.history = json.dumps(history)
 
-        db.session.commit()
+    db.session.commit()
 
-        return redirect(f"/status/{cage}")
+    return redirect(f"/status/{cage}")
 
     return render_template("update.html", cage=cage, data=data)
 # =========================
@@ -293,19 +289,90 @@ def farm():
 @app.route("/dashboard")
 def dashboard():
 
-    cages = Cage.query.filter(Cage.cage != None).all()
+    finished = Cage.query.filter(
+        Cage.finish_date != None
+    ).all()
 
-    total = len(cages)
-    active = len([c for c in cages if c.customer])
-    eggs = sum([c.eggs or 0 for c in cages])
+    born = 0
+
+    zero_one = 0
+    one_three = 0
+    three_five = 0
+    six_up = 0
+
+    for c in finished:
+
+        status = json.loads(c.status or "{}")
+
+        chicks = int(status.get("birth", 0) or 0)
+
+        born += chicks
+
+        if chicks <= 1:
+            zero_one += 1
+
+        elif chicks <= 3:
+            one_three += 1
+
+        elif chicks <= 5:
+            three_five += 1
+
+        else:
+            six_up += 1
 
     return render_template(
         "dashboard.html",
-        total=total,
-        active=active,
-        eggs=eggs
+        born=born,
+        zero_one=zero_one,
+        one_three=one_three,
+        three_five=three_five,
+        six_up=six_up
     )
 
+
+# =========================
+# DASHBOARD GROUP
+# =========================
+@app.route("/dashboard_group/<group>")
+def dashboard_group(group):
+
+    finished = Cage.query.filter(
+        Cage.finish_date != None
+    ).all()
+
+    cages = []
+
+    for c in finished:
+
+        status = json.loads(c.status or "{}")
+
+        chicks = int(status.get("birth", 0) or 0)
+
+        show = False
+
+        if group == "zero_one" and chicks <= 1:
+            show = True
+
+        elif group == "one_three" and 1 <= chicks <= 3:
+            show = True
+
+        elif group == "three_five" and 3 <= chicks <= 5:
+            show = True
+
+        elif group == "six_up" and chicks >= 6:
+            show = True
+
+        if show:
+            cages.append({
+                "cage": c.cage,
+                "customer": c.customer,
+                "birth": chicks
+            })
+
+    return render_template(
+        "dashboard_group.html",
+        cages=cages
+    )
 
 # =========================
 # HISTORY ALL
