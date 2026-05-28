@@ -403,17 +403,13 @@ def dashboard_group(group):
         Cage.finish_date != None
     ).all()
 
-    result = []
+    cages = []
 
     for c in finished:
 
-        status = json.loads(
-            c.status or "{}"
-        )
+        status = json.loads(c.status or "{}")
 
-        chicks = int(
-            status.get("birth", 0) or 0
-        )
+        chicks = int(status.get("birth", 0) or 0)
 
         show = False
 
@@ -430,13 +426,16 @@ def dashboard_group(group):
             show = True
 
         if show:
-            result.append(c)
+            cages.append({
+                "cage": c.cage,
+                "customer": c.customer,
+                "birth": chicks
+            })
 
     return render_template(
-        "farm.html",
-        cages=result
+        "dashboard_group.html",
+        cages=cages
     )
-
 
 # =========================
 # HISTORY ALL
