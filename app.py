@@ -212,39 +212,49 @@ def status(cage):
         stage="1-2"
     )
 
+# =========================
+# UPDATE
+# =========================
 @app.route("/update/<cage>", methods=["GET", "POST"])
 def update(cage):
 
     data = Cage.query.filter_by(cage=cage).first()
 
+    if not data:
+        return redirect("/zones")
+
     if request.method == "POST":
 
-    status = json.loads(data.status or "{}")
+        status = json.loads(data.status or "{}")
 
-    status.update({
-        "inject_date": request.form.get("inject_date", ""),
-        "inject_round": request.form.get("inject_round", ""),   # ครั้งที่ฉีด
-        "brood": request.form.get("brood", ""),
-        "disease_result": request.form.get("disease_result", ""),
-        "birth": request.form.get("birth", ""),
-        "note": request.form.get("note", ""),
-        "eggs": int(request.form.get("eggs", 0)),
-        "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
-    })
+        status.update({
+            "inject_date": request.form.get("inject_date", ""),
+            "inject_round": request.form.get("inject_round", ""),
+            "brood": request.form.get("brood", ""),
+            "disease_result": request.form.get("disease_result", ""),
+            "birth": request.form.get("birth", ""),
+            "note": request.form.get("note", ""),
+            "eggs": int(request.form.get("eggs", 0)),
+            "updated_at": datetime.now().strftime("%d/%m/%Y %H:%M")
+        })
 
-    data.eggs = status["eggs"]
-    data.status = json.dumps(status)
+        data.eggs = status["eggs"]
+        data.status = json.dumps(status)
 
-    history = json.loads(data.history or "[]")
-    history.append(status)
-    data.history = json.dumps(history)
+        history = json.loads(data.history or "[]")
+        history.append(status)
 
-    db.session.commit()
+        data.history = json.dumps(history)
 
-    return redirect(f"/status/{cage}")
+        db.session.commit()
 
-    return render_template("update.html", cage=cage, data=data)
-# =========================
+        return redirect(f"/status/{cage}")
+
+    return render_template(
+        "update.html",
+        cage=cage,
+        data=data
+    )=======================
 # HISTORY
 # =========================
 @app.route("/history/<cage>")
