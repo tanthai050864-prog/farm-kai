@@ -5,15 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <style>
-body{
-font-family:Segoe UI;
-background:#eef7ef;
-padding:30px;
+@import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700&display=swap');
+
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Prompt',sans-serif;
+}
+
+body{
+background:#eef5ef;
+padding:40px;
+color:#234d30;
 }
 
 .wrap{
-max-width:1200px;
+max-width:1400px;
 margin:auto;
 }
 
@@ -21,50 +29,58 @@ margin:auto;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:30px;
+margin-bottom:35px;
 }
 
 .title{
-font-size:40px;
-font-weight:bold;
-color:#234d30;
+font-size:48px;
+font-weight:700;
 }
 
 .back{
 background:white;
-padding:12px 20px;
-border-radius:14px;
+padding:14px 24px;
+border-radius:16px;
 text-decoration:none;
-font-weight:bold;
 color:#234d30;
+font-weight:700;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:20px;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
 }
 
 .card{
 background:white;
-padding:25px;
-border-radius:24px;
-box-shadow:0 10px 25px rgba(0,0,0,.08);
-text-decoration:none;
-color:#234d30;
+padding:28px;
+border-radius:26px;
+box-shadow:0 15px 35px rgba(0,0,0,.08);
 }
 
 .cage{
-font-size:38px;
-font-weight:bold;
+font-size:42px;
+font-weight:700;
 color:#4CAF50;
+margin-bottom:10px;
 }
 
 .info{
-margin-top:15px;
 font-size:20px;
 line-height:1.8;
 }
+
+.empty{
+background:white;
+padding:60px;
+border-radius:30px;
+text-align:center;
+font-size:28px;
+font-weight:700;
+color:#777;
+}
+
 </style>
 </head>
 <body>
@@ -76,24 +92,36 @@ line-height:1.8;
 <a class="back" href="/dashboard">← กลับ</a>
 </div>
 
+{% if cages %}
+
 <div class="grid">
 
 {% for c in cages %}
 
-<a class="card" href="/status/{{c.cage}}">
+<div class="card">
 
-<div class="cage">{{c.cage}}</div>
-
-<div class="info">
-👤 {{c.customer or "-"}}<br>
-🐣 {{c.birth}} ตัว
+<div class="cage">
+{{c.cage}}
 </div>
 
-</a>
+<div class="info">
+👤 ลูกค้า : {{c.customer}}<br>
+🐣 ได้ลูก : {{c.birth}} ตัว
+</div>
+
+</div>
 
 {% endfor %}
 
 </div>
+
+{% else %}
+
+<div class="empty">
+ยังไม่มีคอกที่จบงาน
+</div>
+
+{% endif %}
 
 </div>
 
